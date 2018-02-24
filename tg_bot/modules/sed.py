@@ -73,7 +73,7 @@ def sed(bot: Bot, update: Update):
             check = re.match(repl, to_fix, flags=re.IGNORECASE)
  
             user_id = update.effective_user.id
-            if (user_id == "OWNER_ID" or user_id == "SUDO_USERS" ):
+            if (user_id == "OWNER_ID" or user_id in "SUDO_USERS"):
                 pass
             elif check and check.group(0).lower() == to_fix.lower():
                 update.effective_message.reply_to_message.reply_text("Hey everyone, {} is trying to make "
