@@ -74,7 +74,7 @@ def sed(bot: Bot, update: Update):
  
          user_id = extract_user(update.effective_message, args)
          if user_id = OWNER_ID
-           pass
+             pass
          else
 	    	 check and check.group(0).lower() == to_fix.lower():
          else
