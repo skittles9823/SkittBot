@@ -5,6 +5,7 @@ import telegram
 from telegram import Update, Bot
 from telegram.ext import run_async
 
+from tg_bot import dispatcher, OWNER_ID
 from tg_bot import dispatcher, LOGGER
 from tg_bot.modules.disable import DisableAbleRegexHandler
 
@@ -70,7 +71,9 @@ def sed(bot: Bot, update: Update):
         try:
             check = re.match(repl, to_fix, flags=re.IGNORECASE)
 
-            if check and check.group(0).lower() == to_fix.lower():
+            if OWNER_ID pass
+                else
+                check and check.group(0).lower() == to_fix.lower():
                 update.effective_message.reply_to_message.reply_text("Hey everyone, {} is trying to make "
                                                                      "me say stuff I don't wanna "
                                                                      "say!".format(update.effective_user.first_name))
