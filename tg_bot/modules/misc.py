@@ -343,6 +343,17 @@ Note: this message has had markdown disabled, to allow you to see what the chara
 def stats(bot: Bot, update: Update):
     update.effective_message.reply_text("Current stats:\n" + "\n".join([mod.__stats__() for mod in STATS]))
 
+@run_async
+def sudolist(bot: Bot, update: Update):
+    text = "My sudo users are *{}*:
+    for sudo in SUDO_USERS:
+        user = sudo.user
+        name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
+        if user.username:
+            name = escape_markdown("@" + user.username)
+        text += "\n - {}".format(name)
+ 
+    update.effective_message.reply_text(text, parse_mode=ParseMode.MARKDOWN)
 
 # /ip is for private use
 __help__ = """
@@ -369,6 +380,7 @@ ECHO_HANDLER = CommandHandler("echo", echo, filters=Filters.user(OWNER_ID))
 MD_HELP_HANDLER = CommandHandler("markdownhelp", markdown_help, filters=Filters.private)
 
 STATS_HANDLER = CommandHandler("stats", stats, filters=CustomFilters.sudo_filter)
+SLIST_HANDLER = CommandHandler("sudolist", sudolist, filters=Filters.user(OWNER_ID))
 
 dispatcher.add_handler(ID_HANDLER)
 dispatcher.add_handler(IP_HANDLER)
@@ -379,3 +391,4 @@ dispatcher.add_handler(INFO_HANDLER)
 dispatcher.add_handler(ECHO_HANDLER)
 dispatcher.add_handler(MD_HELP_HANDLER)
 dispatcher.add_handler(STATS_HANDLER)
+dispatcher.add_handler(SLIST_HANDLER)
