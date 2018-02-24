@@ -53,7 +53,6 @@ def separate_sed(sed_string):
 
 @run_async
 def sed(bot: Bot, update: Update):
-       user_id = extract_user(update.effective_message, args)
     sed_result = separate_sed(update.effective_message.text)
     if sed_result and update.effective_message.reply_to_message:
         if update.effective_message.reply_to_message.text:
@@ -73,12 +72,12 @@ def sed(bot: Bot, update: Update):
         try:
             check = re.match(repl, to_fix, flags=re.IGNORECASE)
 
-
+      user_id = extract_user(update.effective_message, args)
          if user_id = OWNER_ID
-                  pass
-             else
-			 check and check.group(0).lower() == to_fix.lower():
-                else
+           pass
+         else
+	    	 check and check.group(0).lower() == to_fix.lower():
+         else
                 check and check.group(0).lower() == to_fix.lower():
                 update.effective_message.reply_to_message.reply_text("Hey everyone, {} is trying to make "
                                                                      "me say stuff I don't wanna "
