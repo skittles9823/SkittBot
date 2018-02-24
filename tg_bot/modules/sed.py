@@ -71,18 +71,15 @@ def sed(bot: Bot, update: Update):
  
         try:
             check = re.match(repl, to_fix, flags=re.IGNORECASE)
- 
-         user_id = extract_user(update.effective_message, args)
-         if user_id = OWNER_ID
-             pass
-         else
-	    	 check and check.group(0).lower() == to_fix.lower():
-         else
-             check and check.group(0).lower() == to_fix.lower():
-             update.effective_message.reply_to_message.reply_text("Hey everyone, {} is trying to make "
+
+            user_id = extract_user(update.effective_message, args)
+            if user_id = OWNER_ID
+                pass
+            elif check and check.group(0).lower() == to_fix.lower():
+                update.effective_message.reply_to_message.reply_text("Hey everyone, {} is trying to make "
                                                                      "me say stuff I don't wanna "
                                                                      "say!".format(update.effective_user.first_name))
-             return
+                return
  
             if 'i' in flags and 'g' in flags:
                 text = re.sub(repl, repl_with, to_fix, flags=re.I).strip()
