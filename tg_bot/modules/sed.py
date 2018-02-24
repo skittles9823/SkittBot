@@ -8,8 +8,9 @@ from telegram.ext import run_async
 from tg_bot import dispatcher, OWNER_ID
 from tg_bot import dispatcher, LOGGER
 from tg_bot.modules.disable import DisableAbleRegexHandler
-#from tg_bot.modules.helper_funcs.extraction import extract_user
- 
+
+#OWNER_ID = [427673272]
+
 DELIMITERS = ("/", ":", "|", "_")
  
  
@@ -72,8 +73,8 @@ def sed(bot: Bot, update: Update):
         try:
             check = re.match(repl, to_fix, flags=re.IGNORECASE)
 
-            #user_id = extract_user(update.effective_message)
-            if id == OWNER_ID:
+            user_id = update.effective_user.id
+            if user_id == OWNER_ID:
                 pass
             elif check and check.group(0).lower() == to_fix.lower():
                 update.effective_message.reply_to_message.reply_text("Hey everyone, {} is trying to make "
