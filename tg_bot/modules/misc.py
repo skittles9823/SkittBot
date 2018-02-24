@@ -345,7 +345,7 @@ def stats(bot: Bot, update: Update):
 
 @run_async
 def sudolist(bot: Bot, update: Update):
-    text = "My sudo users are *{}*:
+    text = "My sudo users are *{}*:"
     for sudo in SUDO_USERS:
         user = sudo.user
         name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
