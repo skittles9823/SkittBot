@@ -72,7 +72,7 @@ def sed(bot: Bot, update: Update):
         try:
             check = re.match(repl, to_fix, flags=re.IGNORECASE)
  
-    user_id = extract_user(update.effective_message, args)
+         user_id = extract_user(update.effective_message, args)
          if user_id = OWNER_ID
            pass
          else
