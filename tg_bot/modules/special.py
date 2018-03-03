@@ -93,14 +93,17 @@ def chats(bot: Bot, update: Update):
 @run_async
 def copypasta(bot: Bot, update: Update):
     message = update.effective_message
-    emojis = ["😂", "😂", "👌", "✌", "💞", "👍", "👌", "💯", "🎶", "👀", "😂", "👓", "👏", "👐", "🍕", "💥", "🍴", "💦", "💦", "🍑", "🍆", "😩", "😏", "👉👌", "👀", "👅", "😩", "🅱"]
+    emojis = ["😂", "😂", "👌", "✌", "💞", "👍", "👌", "💯", "🎶", "👀", "😂", "👓", "👏", "👐", "🍕", "💥", "🍴", "💦", "💦", "🍑", "🍆", "😩", "😏", "👉👌", "👀", "👅", "😩", "🚰"]
     reply_text = random.choice(emojis)
+    b_char = random.choice(message.reply_to_message.text) # choose a random character in the message to be substituted with 🅱️
     for c in message.reply_to_message.text:
         if c == " ":
             reply_text += random.choice(emojis)
         elif c in emojis:
             reply_text += c
             reply_text += random.choice(emojis)
+        elif c == b_char:
+            reply_text += "🅱️"
         else:
             if bool(random.getrandbits(1)):
                 reply_text += c.upper()
@@ -133,6 +136,7 @@ QUICKUNBAN_HANDLER = CommandHandler("quickunban", quickunban, pass_args = True, 
 COPYPASTA_HANDLER = DisableAbleCommandHandler("copypasta", copypasta)
 COPYPASTA_ALIAS_HANDLER = DisableAbleCommandHandler("😂", copypasta)
 CLAPMOJI_HANDLER = DisableAbleCommandHandler("clapmoji", clapmoji)
+CLAPMOJI_ALIAS_HANDLER = DisableAbleCommandHandler("👏", clapmoji)
 
 dispatcher.add_handler(CHATSS_HANDLER)
 dispatcher.add_handler(SNIPE_HANDLER)
@@ -142,3 +146,4 @@ dispatcher.add_handler(QUICKUNBAN_HANDLER)
 dispatcher.add_handler(COPYPASTA_HANDLER)
 dispatcher.add_handler(COPYPASTA_ALIAS_HANDLER)
 dispatcher.add_handler(CLAPMOJI_HANDLER)
+dispatcher.add_handler(CLAPMOJI_ALIAS_HANDLER)
