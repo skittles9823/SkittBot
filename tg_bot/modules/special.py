@@ -133,6 +133,7 @@ QUICKUNBAN_HANDLER = CommandHandler("quickunban", quickunban, pass_args = True, 
 COPYPASTA_HANDLER = DisableAbleCommandHandler("copypasta", copypasta)
 COPYPASTA_ALIAS_HANDLER = DisableAbleCommandHandler("😂", copypasta)
 CLAPMOJI_HANDLER = DisableAbleCommandHandler("clapmoji", clapmoji)
+CLAPMOJI_ALIAS_HANDLER = DisableAbleCommandHandler("👏", clapmoji)
 
 dispatcher.add_handler(CHATSS_HANDLER)
 dispatcher.add_handler(SNIPE_HANDLER)
@@ -142,3 +143,4 @@ dispatcher.add_handler(QUICKUNBAN_HANDLER)
 dispatcher.add_handler(COPYPASTA_HANDLER)
 dispatcher.add_handler(COPYPASTA_ALIAS_HANDLER)
 dispatcher.add_handler(CLAPMOJI_HANDLER)
+dispatcher.add_handler(CLAPMOJI_ALIAS_HANDLER)
