@@ -8,9 +8,11 @@ from telegram.ext import MessageHandler, Filters, CommandHandler
 from telegram.ext.dispatcher import run_async
 from tg_bot.modules.helper_funcs.chat_status import is_user_ban_protected
 
+import telegram, random
 import tg_bot.modules.sql.users_sql as sql
 from tg_bot import dispatcher, OWNER_ID, LOGGER
 from tg_bot.modules.helper_funcs.filters import CustomFilters
+from tg_bot.modules.disable import DisableAbleCommandHandler
 
 USERS_GROUP=4
                                                                                                                                                                                                                                                                                
@@ -86,6 +88,27 @@ def chats(bot: Bot, update: Update):
         update.effective_message.reply_document(document=output, filename="chatlist.txt",
                                                 caption="Here is the list of chats in my database.")
 
+# D A N K module by @deletescape - based on https://github.com/wrxck/mattata/blob/master/plugins/copypasta.mattata
+
+@run_async
+def copypasta(bot: Bot, update: Update):
+    message = update.effective_message
+    emojis = ["😂", "😂", "👌", "✌", "💞", "👍", "👌", "💯", "🎶", "👀", "😂", "👓", "👏", "👐", "🍕", "💥", "🍴", "💦", "💦", "🍑", "🍆", "😩", "😏", "👉👌", "👀", "👅", "😩"]
+    reply_text = random.choice(emojis)
+    for c in message.reply_to_message.text:
+        if c == " ":
+            reply_text += random.choice(emojis)
+        elif c in emojis:
+            reply_text += c
+            reply_text += random.choice(emojis)
+        else:
+            if bool(random.getrandbits(1)):
+                reply_text += c.upper()
+            else:
+                reply_text += c.lower()
+    reply_text += random.choice(emojis)
+    message.reply_to_message.reply_text(reply_text)
+
 __help__ = ""  # no help string
 
 __mod_name__ = "Special"
@@ -96,9 +119,13 @@ SNIPE_HANDLER = CommandHandler("snipe", snipe, pass_args = True, filters=CustomF
 BANALL_HANDLER = CommandHandler("banall", banall, pass_args = True, filters=Filters.user(OWNER_ID))
 QUICKSCOPE_HANDLER = CommandHandler("quickscope", quickscope, pass_args = True, filters=CustomFilters.sudo_filter)
 QUICKUNBAN_HANDLER = CommandHandler("quickunban", quickunban, pass_args = True, filters=CustomFilters.sudo_filter)
+COPYPASTA_HANDLER = DisableAbleCommandHandler("copypasta", copypasta)
+COPYPASTA_ALIAS_HANDLER = DisableAbleCommandHandler("😂", copypasta)
 
 dispatcher.add_handler(CHATSS_HANDLER)
 dispatcher.add_handler(SNIPE_HANDLER)
 dispatcher.add_handler(BANALL_HANDLER)
 dispatcher.add_handler(QUICKSCOPE_HANDLER)
 dispatcher.add_handler(QUICKUNBAN_HANDLER)
+dispatcher.add_handler(COPYPASTA_HANDLER)
+dispatcher.add_handler(COPYPASTA_ALIAS_HANDLER)
