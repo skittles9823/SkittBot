@@ -109,10 +109,21 @@ def copypasta(bot: Bot, update: Update):
     reply_text += random.choice(emojis)
     message.reply_to_message.reply_text(reply_text)
 
+@run_async
+def clapmoji(bot: Bot, update: Update):
+    message = update.effective_message
+    reply_text = "👏 "
+    for i in message.reply_to_message.text:
+        if i == " ":
+            reply_text += " 👏 "
+        else:
+            reply_text += i
+    reply_text += " 👏"
+    message.reply_to_message.reply_text(reply_text)
+
 __help__ = ""  # no help string
 
 __mod_name__ = "Special"
-
 
 CHATSS_HANDLER = CommandHandler("chats", chats, filters=CustomFilters.sudo_filter)
 SNIPE_HANDLER = CommandHandler("snipe", snipe, pass_args = True, filters=CustomFilters.sudo_filter)
@@ -121,6 +132,7 @@ QUICKSCOPE_HANDLER = CommandHandler("quickscope", quickscope, pass_args = True, 
 QUICKUNBAN_HANDLER = CommandHandler("quickunban", quickunban, pass_args = True, filters=CustomFilters.sudo_filter)
 COPYPASTA_HANDLER = DisableAbleCommandHandler("copypasta", copypasta)
 COPYPASTA_ALIAS_HANDLER = DisableAbleCommandHandler("😂", copypasta)
+CLAPMOJI_HANDLER = DisableAbleCommandHandler("clapmoji", clapmoji)
 
 dispatcher.add_handler(CHATSS_HANDLER)
 dispatcher.add_handler(SNIPE_HANDLER)
@@ -129,3 +141,4 @@ dispatcher.add_handler(QUICKSCOPE_HANDLER)
 dispatcher.add_handler(QUICKUNBAN_HANDLER)
 dispatcher.add_handler(COPYPASTA_HANDLER)
 dispatcher.add_handler(COPYPASTA_ALIAS_HANDLER)
+dispatcher.add_handler(CLAPMOJI_HANDLER)
