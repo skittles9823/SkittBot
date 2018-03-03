@@ -93,14 +93,17 @@ def chats(bot: Bot, update: Update):
 @run_async
 def copypasta(bot: Bot, update: Update):
     message = update.effective_message
-    emojis = ["😂", "😂", "👌", "✌", "💞", "👍", "👌", "💯", "🎶", "👀", "😂", "👓", "👏", "👐", "🍕", "💥", "🍴", "💦", "💦", "🍑", "🍆", "😩", "😏", "👉👌", "👀", "👅", "😩", "🅱"]
+    emojis = ["😂", "😂", "👌", "✌", "💞", "👍", "👌", "💯", "🎶", "👀", "😂", "👓", "👏", "👐", "🍕", "💥", "🍴", "💦", "💦", "🍑", "🍆", "😩", "😏", "👉👌", "👀", "👅", "😩", "🚰", "🅱"]
     reply_text = random.choice(emojis)
+    b_char = random.choice(message.reply_to_message.text) # choose a random character in the message to be substituted with 🅱️
     for c in message.reply_to_message.text:
         if c == " ":
             reply_text += random.choice(emojis)
         elif c in emojis:
             reply_text += c
             reply_text += random.choice(emojis)
+        elif c == b_char:
+            reply_text += "🅱️"
         else:
             if bool(random.getrandbits(1)):
                 reply_text += c.upper()
