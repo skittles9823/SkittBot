@@ -95,14 +95,14 @@ def copypasta(bot: Bot, update: Update):
     message = update.effective_message
     emojis = ["😂", "😂", "👌", "✌", "💞", "👍", "👌", "💯", "🎶", "👀", "😂", "👓", "👏", "👐", "🍕", "💥", "🍴", "💦", "💦", "🍑", "🍆", "😩", "😏", "👉👌", "👀", "👅", "😩", "🚰"]
     reply_text = random.choice(emojis)
-    b_char = random.choice(message.reply_to_message.text) # choose a random character in the message to be substituted with 🅱️
+    b_char = random.choice(message.reply_to_message.text).lower() # choose a random character in the message to be substituted with 🅱️
     for c in message.reply_to_message.text:
         if c == " ":
             reply_text += random.choice(emojis)
         elif c in emojis:
             reply_text += c
             reply_text += random.choice(emojis)
-        elif c == b_char:
+        elif c.lower() == b_char:
             reply_text += "🅱️"
         else:
             if bool(random.getrandbits(1)):
@@ -110,6 +110,15 @@ def copypasta(bot: Bot, update: Update):
             else:
                 reply_text += c.lower()
     reply_text += random.choice(emojis)
+    message.reply_to_message.reply_text(reply_text)
+	
+# D A N K module by @deletescape 
+
+@run_async
+def bmoji(bot: Bot, update: Update):
+    message = update.effective_message
+    b_char = random.choice(message.reply_to_message.text).lower() # choose a random character in the message to be substituted with 🅱️
+    reply_text = message.text.replace(b_char, "🅱️").replace(b_char.upper(), "🅱️")
     message.reply_to_message.reply_text(reply_text)
 
 @run_async
@@ -137,6 +146,7 @@ COPYPASTA_HANDLER = DisableAbleCommandHandler("copypasta", copypasta)
 COPYPASTA_ALIAS_HANDLER = DisableAbleCommandHandler("😂", copypasta)
 CLAPMOJI_HANDLER = DisableAbleCommandHandler("clapmoji", clapmoji)
 CLAPMOJI_ALIAS_HANDLER = DisableAbleCommandHandler("👏", clapmoji)
+BMOJI_HANDLER = DisableAbleCommandHandler("🅱️", bmoji)
 
 dispatcher.add_handler(CHATSS_HANDLER)
 dispatcher.add_handler(SNIPE_HANDLER)
@@ -147,3 +157,4 @@ dispatcher.add_handler(COPYPASTA_HANDLER)
 dispatcher.add_handler(COPYPASTA_ALIAS_HANDLER)
 dispatcher.add_handler(CLAPMOJI_HANDLER)
 dispatcher.add_handler(CLAPMOJI_ALIAS_HANDLER)
+dispatcher.add_handler(BMOJI_HANDLER)
