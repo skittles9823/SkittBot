@@ -118,7 +118,7 @@ def copypasta(bot: Bot, update: Update):
 def bmoji(bot: Bot, update: Update):
     message = update.effective_message
     b_char = random.choice(message.reply_to_message.text).lower() # choose a random character in the message to be substituted with 🅱️
-    reply_text = message.text.replace(b_char, "🅱️").replace(b_char.upper(), "🅱️")
+    reply_text = message.replace(b_char, "🅱️").replace(b_char.upper(), "🅱️")
     message.reply_to_message.reply_text(reply_text)
 
 @run_async
