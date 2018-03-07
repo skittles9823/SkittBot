@@ -85,6 +85,8 @@ def gban(bot: Bot, update: Update, args: List[str]):
                 pass
             elif excp.message == "Group chat was deactivated":
                 pass
+            elif excp.message == "Need to be inviter of a user to kick it from a basic group":
+                pass
             else:
                 message.reply_text("Could not gban due to: {}".format(excp.message))
                 send_to_list(bot, SUDO_USERS + SUPPORT_USERS, "Could not gban due to: {}".format(excp.message))
@@ -246,7 +248,7 @@ def __stats__():
 def __user_info__(user_id):
     is_gbanned = sql.is_user_gbanned(user_id)
 
-    text = "Globally banned: *{}*"
+    text = "Globally banned: <b>{}</b>"
     if is_gbanned:
         text = text.format("Yes")
         user = sql.get_gbanned_user(user_id)
