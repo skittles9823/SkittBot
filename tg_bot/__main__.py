@@ -48,7 +48,9 @@ And the following:
 DONATE_STRING = """Oh hoi, glad to hear you want to donate to [Skittles](tg://user?id=427673272). Every donation helps \
 All the donation money will go to hosting me, and keeping Skittles online \
 He doesnt have a job right now, so every little bit helps!
-[PayPal](paypal.me/Skittles2398)."""
+[PayPal](paypal.me/Skittles2398).
+
+If you wish to donate to [Paul](tg://user?id=254318997), the lovely person who made the original source for this bot you can either donate to his [PayPal](paypal.me/PaulSonOfLars), or [Monzo](monzo.me/paulnionvestergaardlarsen)."""
 
 IMPORTED = {}
 MIGRATEABLE = []
