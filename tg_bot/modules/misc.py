@@ -316,11 +316,11 @@ def echo(bot: Bot, update: Update):
     args = update.effective_message.text.split(None, 1)
     message = update.effective_message
     if message.reply_to_message:
-        update.effective_message.reply_to_message.reply_text(args[1], quote=False)
-        update.effective_message.delete()
+        message.reply_to_message.reply_text(quote=False)
+        message.delete()
     else:
-        update.effective_message.reply_text(args[1], quote=False)
-        update.effective_message.delete()
+        message.reply_text(args[1], quote=False)
+        message.delete()
 
 
 @run_async
