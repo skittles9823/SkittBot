@@ -317,7 +317,7 @@ def echo(bot: Bot, update: Update):
     if message.reply_to_message:
         update.effective_message.reply_to_message.reply_text(args[1], quote=False)
         update.effective_message.delete()
-    else
+    else:
         update.effective_message.reply_text(args[1], quote=False)
         update.effective_message.delete()
 
