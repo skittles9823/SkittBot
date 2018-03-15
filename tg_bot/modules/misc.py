@@ -323,9 +323,7 @@ def echo(bot: Bot, update: Update):
         message.delete()
 
 
-@run_async
-def markdown_help(bot: Bot, update: Update):
-    update.effective_message.reply_text("""
+MARKDOWN_HELP = """
 Markdown is a very powerful formatting tool supported by telegram. {} has some enhancements, to make sure that \
 saved messages are correctly parsed, and to allow you to create buttons.
 
@@ -344,14 +342,19 @@ EG: <code>[This is a button](buttonurl:example.com)</code>
 If you want multiple buttons on the same line, use :same, as such:
 <code>[one](buttonurl://example.com)
 [two](buttonurl://google.com:same)</code>
-This will create two buttons on a single line, instead of one button p line.
+This will create two buttons on a single line, instead of one button per line.
 
 Keep in mind that your message <b>MUST</b> contain some text other than just a button!
-""".format(bot.first_name), parse_mode=ParseMode.HTML)
+""".format(dispatcher.bot.first_name)
+
+
+@run_async
+def markdown_help(bot: Bot, update: Update):
+    update.effective_message.reply_text(MARKDOWN_HELP, parse_mode=ParseMode.HTML)
     update.effective_message.reply_text("Try forwarding the following message to me, and you'll see!")
     update.effective_message.reply_text("/save test This is a markdown test. _italics_, *bold*, `code`, "
                                         "[URL](example.com) [button](buttonurl:github.com) "
-                                        "[button2](buttonurl://google.com:same)]")
+                                        "[button2](buttonurl://google.com:same)")
 
 
 @run_async
@@ -376,8 +379,9 @@ __help__ = """
  - /runs: reply a random string from an array of replies.
  - /slap: slap a user, or get slapped if not a reply.
  - /time <place>: gives the local time at the given place.
- - /markdownhelp: quick summary of how markdown works in telegram - can only be called in private chats.
  - /info: get information about a user.
+
+ - /markdownhelp: quick summary of how markdown works in telegram - can only be called in private chats.
 """
 
 __mod_name__ = "Misc"
