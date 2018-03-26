@@ -15,29 +15,29 @@ from tg_bot.modules.helper_funcs.filters import CustomFilters
 from tg_bot.modules.disable import DisableAbleCommandHandler
 
 USERS_GROUP=4
-                                                                                                                                                                                                                                                                               
-@run_async                                                                                                                                                                                                                                                                     
-def quickscope(bot: Bot, update: Update, args: List[int]):                                                                                                                                                                                                                     
-    if args:                                                                                                                                                                                                                                                                   
-        chat_id = str(args[1])                                                                                                                                                                                                                                                 
-        to_kick = str(args[0])                                                                                                                                                                                                                                                 
-    else:                                                                                                                                                                                                                                                                      
-        update.effective_message.reply_text("You don't seem to be referring to a chat/user")                                                                                                                                                                                   
-    try:                                                                                                                                                                                                                                                                       
-        bot.kick_chat_member(chat_id, to_kick)                                                                                                                                                                                                                                 
-        update.effective_message.reply_text("Attempted banning " + to_kick + " from" + chat_id)                                                                                                                                                                                
-    except BadRequest as excp:                                                                                                                                                                                                                                                 
-        update.effective_message.reply_text(excp.message + " " + to_kick)                                                                                                                                                                                                      
-                                                                                                                                                                                                                                                                               
-@run_async                                                                                                                                                                                                                                                                     
-def quickunban(bot: Bot, update: Update, args: List[int]):                                                                                                                                                                                                                     
-    if args:                                                                                                                                                                                                                                                                   
-        chat_id = str(args[1])                                                                                                                                                                                                                                                 
-        to_kick = str(args[0])                                                                                                                                                                                                                                                 
-    else:                                                                                                                                                                                                                                                                      
-        update.effective_message.reply_text("You don't seem to be referring to a chat/user")                                                                                                                                                                                   
-    try:                                                                                                                                                                                                                                                                       
-        bot.unban_chat_member(chat_id, to_kick)                                                                                                                                                                                                                                
+
+@run_async
+def quickscope(bot: Bot, update: Update, args: List[int]):
+    if args:
+        chat_id = str(args[1])
+        to_kick = str(args[0])
+    else:
+        update.effective_message.reply_text("You don't seem to be referring to a chat/user")
+    try:
+        bot.kick_chat_member(chat_id, to_kick)
+        update.effective_message.reply_text("Attempted banning " + to_kick + " from" + chat_id)
+    except BadRequest as excp:
+        update.effective_message.reply_text(excp.message + " " + to_kick)
+
+@run_async
+def quickunban(bot: Bot, update: Update, args: List[int]):
+    if args:
+        chat_id = str(args[1])
+        to_kick = str(args[0])
+    else:
+        update.effective_message.reply_text("You don't seem to be referring to a chat/user")
+    try:
+        bot.unban_chat_member(chat_id, to_kick)
         update.effective_message.reply_text("Attempted unbanning " + to_kick + " from" + chat_id)
     except BadRequest as excp:
         update.effective_message.reply_text(excp.message + " " + to_kick)
@@ -81,8 +81,8 @@ def snipe(bot: Bot, update: Update, args: List[str]):
 def getlink(bot: Bot, update: Update, args: List[str]):
     if args:
         chat_id = str(args[0])
-    else:                                                                                                                                                                                                                                                                      
-        update.effective_message.reply_text("You don't seem to be referring to a chat") 
+    else:
+        update.effective_message.reply_text("You don't seem to be referring to a chat")
     try:
     if chat.type == chat.SUPERGROUP or chat.type == chat.CHANNEL:
         bot_member = chat.get_member(bot.id)
