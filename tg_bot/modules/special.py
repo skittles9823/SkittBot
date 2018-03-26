@@ -76,6 +76,29 @@ def snipe(bot: Bot, update: Update, args: List[str]):
             update.effective_message.reply_text("Couldn't send the message. Perhaps I'm not part of that group?")
 
 
+@run_async
+@bot_admin
+@user_admin
+def getlink(bot: Bot, update: Update, args: List[str]):
+    if args:
+        chat_id = str(args[0])
+    else:                                                                                                                                                                                                                                                                      
+        update.effective_message.reply_text("You don't seem to be referring to a chat") 
+    try:
+        chat = chat_id  # Just doing this to test cause im nub and don't want to change too much code.
+    if chat.username:
+        update.effective_message.reply_text(chat.username)
+    elif chat.type == chat.SUPERGROUP or chat.type == chat.CHANNEL:
+        bot_member = chat.get_member(bot.id)
+        if bot_member.can_invite_users:
+            invitelink = bot.exportChatInviteLink(chat_id)
+            update.effective_message.reply_text(invitelink)
+        else:
+            update.effective_message.reply_text("I don't have access to the invite link!")
+    else:
+        update.effective_message.reply_text("I can only give you invite links for supergroups and channels, sorry!")
+
+
 __help__ = ""  # no help string
 
 __mod_name__ = "Special"
@@ -84,8 +107,10 @@ SNIPE_HANDLER = CommandHandler("snipe", snipe, pass_args = True, filters=CustomF
 BANALL_HANDLER = CommandHandler("banall", banall, pass_args = True, filters=Filters.user(OWNER_ID))
 QUICKSCOPE_HANDLER = CommandHandler("quickscope", quickscope, pass_args = True, filters=CustomFilters.sudo_filter)
 QUICKUNBAN_HANDLER = CommandHandler("quickunban", quickunban, pass_args = True, filters=CustomFilters.sudo_filter)
+GETLINK_HANDLER = CommandHandler("getlink", getlink, pass_args = True, filters=Filters.user(OWNER_ID))
 
 dispatcher.add_handler(SNIPE_HANDLER)
 dispatcher.add_handler(BANALL_HANDLER)
 dispatcher.add_handler(QUICKSCOPE_HANDLER)
 dispatcher.add_handler(QUICKUNBAN_HANDLER)
+dispatcher.add_handler(GETLINK_HANDLER)
