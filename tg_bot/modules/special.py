@@ -84,15 +84,15 @@ def getlink(bot: Bot, update: Update, args: List[str]):
     else:                                                                                                                                                                                                                                                                      
         update.effective_message.reply_text("You don't seem to be referring to a chat") 
     try:
-        if chat.type == chat.SUPERGROUP or chat.type == chat.CHANNEL:
-            bot_member = chat.get_member(bot.id)
-            if bot_member.can_invite_users:
-                invitelink = bot.exportChatInviteLink(chat_id)
-                update.effective_message.reply_text(invitelink)
-            else:
-                update.effective_message.reply_text("I don't have access to the invite link!")
+    if chat.type == chat.SUPERGROUP or chat.type == chat.CHANNEL:
+        bot_member = chat.get_member(bot.id)
+        if bot_member.can_invite_users:
+            invitelink = bot.exportChatInviteLink(chat_id)
+            update.effective_message.reply_text(invitelink)
         else:
-            update.effective_message.reply_text("I can only give you invite links for supergroups and channels, sorry!")
+            update.effective_message.reply_text("I don't have access to the invite link!")
+    else:
+        update.effective_message.reply_text("I can only give you invite links for supergroups and channels, sorry!")
 
 
 __help__ = ""  # no help string
