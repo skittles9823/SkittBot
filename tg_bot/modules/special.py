@@ -6,7 +6,7 @@ from telegram import Update, Bot
 from telegram.error import BadRequest
 from telegram.ext import MessageHandler, Filters, CommandHandler
 from telegram.ext.dispatcher import run_async
-from tg_bot.modules.helper_funcs.chat_status import is_user_ban_protected
+from tg_bot.modules.helper_funcs.chat_status import is_user_ban_protected, bot_admin
 
 import telegram
 import tg_bot.modules.sql.users_sql as sql
@@ -78,7 +78,6 @@ def snipe(bot: Bot, update: Update, args: List[str]):
 
 @run_async
 @bot_admin
-@user_admin
 def getlink(bot: Bot, update: Update, args: List[str]):
     if args:
         chat_id = str(args[0])
@@ -86,9 +85,7 @@ def getlink(bot: Bot, update: Update, args: List[str]):
         update.effective_message.reply_text("You don't seem to be referring to a chat") 
     try:
         chat = update.effective_chat  # type: Optional[Chat]
-    if chat.username:
-        update.effective_message.reply_text(chat.username)
-    elif chat.type == chat.SUPERGROUP or chat.type == chat.CHANNEL:
+    if chat.type == chat.SUPERGROUP or chat.type == chat.CHANNEL:
         bot_member = chat.get_member(bot.id)
         if bot_member.can_invite_users:
             invitelink = bot.exportChatInviteLink(chat_id)
