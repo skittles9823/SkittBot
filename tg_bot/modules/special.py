@@ -84,7 +84,6 @@ def getlink(bot: Bot, update: Update, args: List[str]):
     else:                                                                                                                                                                                                                                                                      
         update.effective_message.reply_text("You don't seem to be referring to a chat") 
     try:
-        chat = update.effective_chat  # type: Optional[Chat]
     if chat.type == chat.SUPERGROUP or chat.type == chat.CHANNEL:
         bot_member = chat.get_member(bot.id)
         if bot_member.can_invite_users:
