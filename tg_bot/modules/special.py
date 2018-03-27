@@ -81,21 +81,18 @@ def snipe(bot: Bot, update: Update, args: List[str]):
 
 @run_async
 @bot_admin
-def getlink(bot: Bot, update: Update, args: List[str]):
+def getlink(bot: Bot, update: Update, args: List[int]):
     if args:
-        chat_id = str(args[0])
+        chat_id = int(args[0])
     else:
         update.effective_message.reply_text("You don't seem to be referring to a chat")
-    chat = chat_id
-    if chat.type == chat.SUPERGROUP or chat.type == chat.CHANNEL:
-        bot_member = chat.get_member(bot.id)
-        if bot_member.can_invite_users:
-            invitelink = bot.exportChatInviteLink(chat_id)
-            update.effective_message.reply_text(invitelink)
-        else:
-            update.effective_message.reply_text("I don't have access to the invite link!")
+    chat = bot.getChat(chat_id)
+    bot_member = chat.get_member(bot.id)
+    if bot_member.can_invite_users:
+        invitelink = bot.exportChatInviteLink(chat_id)
+        update.effective_message.reply_text(invitelink)
     else:
-        update.effective_message.reply_text("I can only give you invite links for supergroups and channels, sorry!")
+        update.effective_message.reply_text("I don't have access to the invite link!")
 
 
 __mod_name__ = "Special"
