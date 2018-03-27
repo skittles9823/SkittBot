@@ -83,16 +83,18 @@ def snipe(bot: Bot, update: Update, args: List[str]):
 @bot_admin
 def getlink(bot: Bot, update: Update, args: List[int]):
     if args:
-        chat_id = int(args[0])
-    else:
-        update.effective_message.reply_text("You don't seem to be referring to a chat")
+        try:
+            chat_id = int(args[0])
+        except TelegramError:
+            update.effective_message.reply_text("You don't seem to be referring to a chat")
     chat = bot.getChat(chat_id)
     bot_member = chat.get_member(bot.id)
     if bot_member.can_invite_users:
-        invitelink = bot.exportChatInviteLink(chat_id)
-        update.effective_message.reply_text(invitelink)
-    else:
-        update.effective_message.reply_text("I don't have access to the invite link!")
+        try:
+            invitelink = bot.exportChatInviteLink(chat_id)
+            update.effective_message.reply_text(invitelink)
+        except TelegramError:
+            update.effective_message.reply_text("Cannot retrieve invite link from this chat. I don't have permission or i'm not there!")
 
 
 __mod_name__ = "Special"
