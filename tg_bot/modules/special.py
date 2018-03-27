@@ -82,17 +82,18 @@ def snipe(bot: Bot, update: Update, args: List[str]):
 @run_async
 @bot_admin
 def getlink(bot: Bot, update: Update, args: List[int]):
-    if args:
+    try:
         chat_id = int(args[0])
-    else:
+    except UnboundLocalError as error:
         update.effective_message.reply_text("You don't seem to be referring to a chat")
     chat = bot.getChat(chat_id)
     bot_member = chat.get_member(bot.id)
     if bot_member.can_invite_users:
-        invitelink = bot.exportChatInviteLink(chat_id)
-        update.effective_message.reply_text(invitelink)
-    else:
-        update.effective_message.reply_text("I don't have access to the invite link!")
+        try:
+            invitelink = bot.exportChatInviteLink(chat_id)
+            update.effective_message.reply_text(invitelink)
+        except BadRequest as excp:
+            update.effective_message.reply_text("I don't have access to the invite link!")
 
 
 __mod_name__ = "Special"
