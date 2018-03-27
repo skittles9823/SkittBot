@@ -61,7 +61,7 @@ COPYPASTA_ALIAS_HANDLER = DisableAbleCommandHandler("😂", copypasta)
 CLAPMOJI_HANDLER = DisableAbleCommandHandler("clapmoji", clapmoji)
 CLAPMOJI_ALIAS_HANDLER = DisableAbleCommandHandler("👏", clapmoji)
 BMOJI_HANDLER = DisableAbleCommandHandler("🅱️", bmoji)
-BMOJI_ALIAS_HANDLER = DisableAbleCommandHandler("️🅱", bmoji)
+BMOJI_ALIAS_HANDLER = DisableAbleCommandHandler("️bmoji", bmoji)
 
 dispatcher.add_handler(COPYPASTA_HANDLER)
 dispatcher.add_handler(COPYPASTA_ALIAS_HANDLER)
