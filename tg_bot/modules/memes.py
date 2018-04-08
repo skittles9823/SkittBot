@@ -1,4 +1,4 @@
-import random
+import random, re
 from telegram import Message, Update, Bot, User
 from telegram import MessageEntity
 from telegram.ext import Filters, MessageHandler, run_async
@@ -48,6 +48,19 @@ def clapmoji(bot: Bot, update: Update):
     reply_text += " 👏"
     message.reply_to_message.reply_text(reply_text)
 
+@run_async
+def owo(bot: Bot, update: Update):
+    message = update.effective_message
+    faces = ['(・`ω´・)',';;w;;','owo','UwU','>w<','^w^','\(^o\) (/o^)/','( ^ _ ^)∠☆','(ô_ô)','~:o',';____;', '(*^*)', '(>_', '(♥_♥)', '*(^O^)*', '((+_+))']
+    reply_text = re.sub(r'(r|l)', "w", message.reply_to_message.text)
+    reply_text = re.sub(r'(R|L)', 'W', reply_text)
+    reply_text = re.sub(r'n([aeiou])', r'ny\1', reply_text)
+    reply_text = re.sub(r'N([aeiouAEIOU])', r'Ny\1', reply_text)
+    reply_text = re.sub(r'\!+', ' ' + random.choice(faces), reply_text)
+    reply_text = reply_text.replace("ove", "uv")
+    reply_text += ' ' + random.choice(faces)
+    message.reply_to_message.reply_text(reply_text)
+
 __help__ = "many memz"  # no help string
 
 __mod_name__ = "Memes"
@@ -58,6 +71,7 @@ CLAPMOJI_HANDLER = DisableAbleCommandHandler("clapmoji", clapmoji)
 CLAPMOJI_ALIAS_HANDLER = DisableAbleCommandHandler("👏", clapmoji)
 BMOJI_HANDLER = DisableAbleCommandHandler("🅱️", bmoji)
 BMOJI_ALIAS_HANDLER = DisableAbleCommandHandler("bmoji", bmoji)
+OWO_HANDLER = DisableAbleCommandHandler("owo", owo)
 
 dispatcher.add_handler(COPYPASTA_HANDLER)
 dispatcher.add_handler(COPYPASTA_ALIAS_HANDLER)
@@ -65,3 +79,4 @@ dispatcher.add_handler(CLAPMOJI_HANDLER)
 dispatcher.add_handler(CLAPMOJI_ALIAS_HANDLER)
 dispatcher.add_handler(BMOJI_HANDLER)
 dispatcher.add_handler(BMOJI_ALIAS_HANDLER)
+dispatcher.add_handler(OWO_HANDLER)
