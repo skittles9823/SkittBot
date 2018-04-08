@@ -44,11 +44,7 @@ def bmoji(bot: Bot, update: Update):
 def clapmoji(bot: Bot, update: Update):
     message = update.effective_message
     reply_text = "👏 "
-    for i in message.reply_to_message.text:
-        if i == " ":
-            reply_text += " 👏 "
-        else:
-            reply_text += i
+    reply_text += message.reply_to_message.text.replace(" ", " 👏 ")
     reply_text += " 👏"
     message.reply_to_message.reply_text(reply_text)
 
