@@ -8,6 +8,7 @@ from telegram.ext import MessageHandler, Filters, CommandHandler
 from telegram.ext.dispatcher import run_async
 from tg_bot.modules.helper_funcs.chat_status import is_user_ban_protected, bot_admin
 
+import random
 import telegram
 import tg_bot.modules.sql.users_sql as sql
 from tg_bot import dispatcher, OWNER_ID, LOGGER
@@ -16,6 +17,14 @@ from tg_bot.modules.disable import DisableAbleCommandHandler
 
 USERS_GROUP = 4
 
+MESSAGES = (
+    "Happy birthday ",
+    "Heppi burfdey ",
+    "Hep burf ",
+    "Happy day of birthing ",
+    "Sadn't deathn't-day ",
+    "Oof, you were born today ",
+)
 
 @run_async
 def quickscope(bot: Bot, update: Update, args: List[int]):
@@ -94,6 +103,14 @@ def getlink(bot: Bot, update: Update, args: List[int]):
     else:
         update.effective_message.reply_text("I don't have access to the invite link!")
 
+@run_async
+def birthday(bot: Bot, update: Update, args: List[str]):
+	if args:
+		username = str(args[0])
+	for i in range(10):
+		i = username
+		messages = random.choice(MESSAGES)
+		update.effective_message(random.choice(MESSAGES) + i)
 
 __mod_name__ = "Special"
 
@@ -102,9 +119,11 @@ BANALL_HANDLER = CommandHandler("banall", banall, pass_args=True, filters=Filter
 QUICKSCOPE_HANDLER = CommandHandler("quickscope", quickscope, pass_args=True, filters=CustomFilters.sudo_filter)
 QUICKUNBAN_HANDLER = CommandHandler("quickunban", quickunban, pass_args=True, filters=CustomFilters.sudo_filter)
 GETLINK_HANDLER = CommandHandler("getlink", getlink, pass_args=True, filters=Filters.user(OWNER_ID))
+BIRTHDAY_HANDLER = CommandHandler("birthday", birthday, pass_args=True, filters=Filters.group)
 
 dispatcher.add_handler(SNIPE_HANDLER)
 dispatcher.add_handler(BANALL_HANDLER)
 dispatcher.add_handler(QUICKSCOPE_HANDLER)
 dispatcher.add_handler(QUICKUNBAN_HANDLER)
 dispatcher.add_handler(GETLINK_HANDLER)
+dispatcher.add_handler(BIRTHDAY_HANDLER)
