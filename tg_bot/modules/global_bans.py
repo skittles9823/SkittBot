@@ -54,7 +54,7 @@ def gban(bot: Bot, update: Update, args: List[str]):
         return
 
     if int(user_id) in SUDO_USERS:
-        message.reply_text("I spy, with my little eye... a sudo user war! Why are you guys turning on each other?")
+        message.reply_text("Calm down Aniboob, stop trying to act tough.")
         return
 
     if int(user_id) in SUPPORT_USERS:
@@ -62,7 +62,7 @@ def gban(bot: Bot, update: Update, args: List[str]):
         return
 
     if user_id == bot.id:
-        message.reply_text("-_- So funny, lets gban myself why don't I? Nice try.")
+        message.reply_text("Do you want to die?")
         return
 
     try:
@@ -85,11 +85,11 @@ def gban(bot: Bot, update: Update, args: List[str]):
             message.reply_text("This user is already gbanned; I've gone and updated the gban reason though!")
         else:
             message.reply_text("Do you mind trying again? I thought this person was gbanned, but then they weren't? "
-                               "Am very confused")
+                               "Am very confused 🤔")
 
         return
 
-    message.reply_text("*Blows dust off of banhammer* 😉")
+    message.reply_text(" They're dead now! 👉😎👉")
 
     banner = update.effective_user  # type: Optional[User]
     send_to_list(bot, SUDO_USERS + SUPPORT_USERS,
@@ -122,7 +122,7 @@ def gban(bot: Bot, update: Update, args: List[str]):
             pass
 
     send_to_list(bot, SUDO_USERS + SUPPORT_USERS, "gban complete!")
-    message.reply_text("Person has been gbanned.")
+    message.reply_text("Person has been \"Dealt with\".")
 
 
 @run_async

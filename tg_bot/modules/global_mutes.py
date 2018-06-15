@@ -64,7 +64,7 @@ def gmute(bot: Bot, update: Update, args: List[str]):
 
         return
 
-    message.reply_text("*Gets duct tape ready* 😉")
+    message.reply_text("Shut the fuck up thanks 🤐")
 
     muter = update.effective_user  # type: Optional[User]
     send_to_list(bot, SUDO_USERS + SUPPORT_USERS,
@@ -117,7 +117,7 @@ def gmute(bot: Bot, update: Update, args: List[str]):
             pass
 
     send_to_list(bot, SUDO_USERS + SUPPORT_USERS, "gmute complete!")
-    message.reply_text("Person has been gmuted.")
+    message.reply_text("They won't be talking again anytime soon.")
 
 
 @run_async

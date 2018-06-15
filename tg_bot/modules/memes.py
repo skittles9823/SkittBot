@@ -61,7 +61,11 @@ def owo(bot: Bot, update: Update):
     reply_text += ' ' + random.choice(faces)
     message.reply_to_message.reply_text(reply_text)
 
-__help__ = "many memz"  # no help string
+# no help string
+__help__ = """
+ many memz
+ Thanks @deletescape for the meme commands :D
+"""
 
 __mod_name__ = "Memes"
 

@@ -247,7 +247,7 @@ def info(bot: Bot, update: Update, args: List[str]):
     text += "\nPermanent user link: {}".format(mention_html(user.id, "link"))
 
     if user.id == OWNER_ID:
-        text += "\n\nThis person is my owner - I would never do anything against them!"
+        text += "\n\nI wont hurt Skittles ;_;"
     else:
         if user.id in SUDO_USERS:
             text += "\nThis person is one of my sudo users! " \
@@ -273,7 +273,7 @@ def info(bot: Bot, update: Update, args: List[str]):
 def get_time(bot: Bot, update: Update, args: List[str]):
     location = " ".join(args)
     if location.lower() == bot.first_name.lower():
-        update.effective_message.reply_text("Its always banhammer time for me!")
+        update.effective_message.reply_text("Time for ｄａｎｋ　ｍｅｍｅｓ!")
         bot.send_sticker(update.effective_chat.id, BAN_STICKER)
         return
 
