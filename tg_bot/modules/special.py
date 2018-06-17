@@ -2,10 +2,12 @@ from io import BytesIO
 from time import sleep
 from typing import Optional, List
 from telegram import TelegramError, Chat, Message
-from telegram import Update, Bot
+from telegram import Update, Bot, User
+from telegram import ParseMode
 from telegram.error import BadRequest
 from telegram.ext import MessageHandler, Filters, CommandHandler
 from telegram.ext.dispatcher import run_async
+from telegram.utils.helpers import escape_markdown
 from tg_bot.modules.helper_funcs.chat_status import is_user_ban_protected, bot_admin
 
 import random
@@ -104,13 +106,25 @@ def getlink(bot: Bot, update: Update, args: List[int]):
         update.effective_message.reply_text("I don't have access to the invite link!")
 
 @run_async
+def sudolist(bot: Bot, update: Update):
+    text = "My sudo users are *{}*:"
+    for user_id in SUDO_USERS:
+        user = bot.get_chat(user_id)
+        name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
+        if user.username:
+            name = escape_markdown("@" + user.username)
+        text += "\n - {}".format(name)
+
+    update.effective_message.reply_text(text, parse_mode=ParseMode.MARKDOWN)
+
+@run_async
 def birthday(bot: Bot, update: Update, args: List[str]):
-	if args:
-		username = str(args[0])
-	for i in range(10):
-		i = username
-		messages = random.choice(MESSAGES)
-		update.effective_message(random.choice(MESSAGES) + i)
+    if args:
+        username = str(args[0])
+    for i in range(10):
+        i = username
+        messages = random.choice(MESSAGES)
+        update.effective_message(random.choice(MESSAGES) + i)
 
 __mod_name__ = "Special"
 
@@ -119,6 +133,7 @@ BANALL_HANDLER = CommandHandler("banall", banall, pass_args=True, filters=Filter
 QUICKSCOPE_HANDLER = CommandHandler("quickscope", quickscope, pass_args=True, filters=CustomFilters.sudo_filter)
 QUICKUNBAN_HANDLER = CommandHandler("quickunban", quickunban, pass_args=True, filters=CustomFilters.sudo_filter)
 GETLINK_HANDLER = CommandHandler("getlink", getlink, pass_args=True, filters=Filters.user(OWNER_ID))
+SLIST_HANDLER = CommandHandler("sudolist", sudolist, filters=Filters.user(OWNER_ID))
 BIRTHDAY_HANDLER = CommandHandler("birthday", birthday, pass_args=True, filters=Filters.group)
 
 dispatcher.add_handler(SNIPE_HANDLER)
@@ -126,4 +141,5 @@ dispatcher.add_handler(BANALL_HANDLER)
 dispatcher.add_handler(QUICKSCOPE_HANDLER)
 dispatcher.add_handler(QUICKUNBAN_HANDLER)
 dispatcher.add_handler(GETLINK_HANDLER)
+dispatcher.add_handler(SLIST_HANDLER)
 dispatcher.add_handler(BIRTHDAY_HANDLER)
