@@ -8,7 +8,7 @@ from telegram.error import BadRequest
 from telegram.ext import MessageHandler, Filters, CommandHandler
 from telegram.ext.dispatcher import run_async
 from telegram.utils.helpers import escape_markdown
-from tg_bot.modules.helper_funcs.chat_status import is_user_ban_protected, bot_admin
+from tg_bot.modules.helper_funcs.chat_status import is_user_ban_protected, bot_admin, user_admin
 
 import random
 import telegram
@@ -118,6 +118,7 @@ def sudolist(bot: Bot, update: Update):
     update.effective_message.reply_text(text, parse_mode=ParseMode.MARKDOWN)
 
 @run_async
+@user_admin
 def birthday(bot: Bot, update: Update, args: List[str]):
     if args:
         username = str(args[0])
