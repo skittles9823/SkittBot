@@ -1,4 +1,4 @@
-import random, re
+import random, re, requests
 from telegram import Message, Update, Bot, User
 from telegram import MessageEntity
 from telegram.ext import Filters, MessageHandler, run_async
@@ -61,6 +61,24 @@ def owo(bot: Bot, update: Update):
     reply_text += ' ' + random.choice(faces)
     message.reply_to_message.reply_text(reply_text)
 
+@run_async
+def cat(bot: Bot, update: Update):
+    message = update.effective_message
+    r = requests.get('https://aws.random.cat/meow')
+    message.reply_to_message.reply_image(r.json['file'])
+
+@run_async
+def dog(bot: Bot, update: Update):
+    message = update.effective_message
+    r = requests.get('https://random.dog/woof.json')
+    message.reply_to_message.reply_image(r.json['url'])
+
+@run_async
+def fox(bot: Bot, update: Update):
+    message = update.effective_message
+    r = requests.get('https://randomfox.ca/floof/')
+    message.reply_to_message.reply_image(r.json['image'])
+
 # no help string
 __help__ = """
  many memz
@@ -76,6 +94,9 @@ CLAPMOJI_ALIAS_HANDLER = DisableAbleCommandHandler("👏", clapmoji)
 BMOJI_HANDLER = DisableAbleCommandHandler("🅱️", bmoji)
 BMOJI_ALIAS_HANDLER = DisableAbleCommandHandler("bmoji", bmoji)
 OWO_HANDLER = DisableAbleCommandHandler("owo", owo)
+CAT_HANDLER = DisableAbleCommandHandler("cat", cat)
+DOG_HANDLER = DisableAbleCommandHandler("dog", dog)
+FOX_HANDLER = DisableAbleCommandHandler("fox", fox)
 
 dispatcher.add_handler(COPYPASTA_HANDLER)
 dispatcher.add_handler(COPYPASTA_ALIAS_HANDLER)
@@ -84,3 +105,6 @@ dispatcher.add_handler(CLAPMOJI_ALIAS_HANDLER)
 dispatcher.add_handler(BMOJI_HANDLER)
 dispatcher.add_handler(BMOJI_ALIAS_HANDLER)
 dispatcher.add_handler(OWO_HANDLER)
+dispatcher.add_handler(CAT_HANDLER)
+dispatcher.add_handler(DOG_HANDLER)
+dispatcher.add_handler(FOX_HANDLER)
