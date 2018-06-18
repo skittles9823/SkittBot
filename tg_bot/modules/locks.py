@@ -1,6 +1,7 @@
 import html
 from typing import Optional, List
 
+import telegram.ext as tg
 from telegram import Message, Chat, Update, Bot, ParseMode, User, MessageEntity
 from telegram import TelegramError
 from telegram.error import BadRequest
@@ -28,13 +29,14 @@ LOCK_TYPES = {'sticker': Filters.sticker,
               'url': Filters.entity(MessageEntity.URL) | Filters.caption_entity(MessageEntity.URL),
               'bots': Filters.status_update.new_chat_members,
               'forward': Filters.forwarded,
-              'game': Filters.game
+              'game': Filters.game,
+              'location': Filters.location,
               }
 
 GIF = Filters.document & CustomFilters.mime_type("video/mp4")
 OTHER = Filters.game | Filters.sticker | GIF
 MEDIA = Filters.audio | Filters.document | Filters.video | Filters.voice | Filters.photo
-MESSAGES = Filters.text | Filters.contact | Filters.location | Filters.venue | MEDIA | OTHER
+MESSAGES = Filters.text | Filters.contact | Filters.location | Filters.venue | Filters.command | MEDIA | OTHER
 PREVIEWS = Filters.entity("url")
 
 RESTRICTION_TYPES = {'messages': MESSAGES,
@@ -45,6 +47,19 @@ RESTRICTION_TYPES = {'messages': MESSAGES,
 
 PERM_GROUP = 1
 REST_GROUP = 2
+
+
+class CustomCommandHandler(tg.CommandHandler):
+    def __init__(self, command, callback, **kwargs):
+        super().__init__(command, callback, **kwargs)
+
+    def check_update(self, update):
+        return super().check_update(update) and not (
+                sql.is_restr_locked(update.effective_chat.id, 'messages') and not is_user_admin(update.effective_chat,
+                                                                                                update.effective_user.id))
+
+
+tg.CommandHandler = CustomCommandHandler
 
 
 # NOT ASYNC
@@ -159,11 +174,6 @@ def unlock(bot: Bot, update: Update, args: List[str]) -> str:
                     unrestr_members(bot, chat.id, members, True, True, True, True)
                 """
                 message.reply_text("Unlocked {} for everyone!".format(args[0]))
-                message.reply_text(
-                    "NOTE: due to a recent abuse of locking, {} will now only be deleting messages, and not "
-                    "restricting users via the tg api. This shouldn't affect all you users though, so dont worry! "
-                    "Just means that any restricted users should be manually unrestricted from the chat "
-                    "admin pannel.".format(bot.first_name))
 
                 return "<b>{}:</b>" \
                        "\n#UNLOCK" \
@@ -246,9 +256,10 @@ def build_lock_message(chat_id):
                    "\n - url = `{}`" \
                    "\n - bots = `{}`" \
                    "\n - forward = `{}`" \
-                   "\n - game = `{}`".format(locks.sticker, locks.audio, locks.voice, locks.document,
-                                             locks.video, locks.contact, locks.photo, locks.gif, locks.url, locks.bots,
-                                             locks.forward, locks.game)
+                   "\n - game = `{}`" \
+                   "\n - location = `{}`".format(locks.sticker, locks.audio, locks.voice, locks.document,
+                                                 locks.video, locks.contact, locks.photo, locks.gif, locks.url,
+                                                 locks.bots, locks.forward, locks.game, locks.location)
         if restr:
             res += "\n - messages = `{}`" \
                    "\n - media = `{}`" \
