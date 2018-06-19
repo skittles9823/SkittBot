@@ -5,9 +5,9 @@ import random
 from typing import Optional, List
 
 import requests
-from telegram import Message, Chat, Update, Bot, MessageEntity
-from telegram import ParseMode
+from telegram import Message, Chat, Update, Bot, MessageEntity, ParseMode
 from telegram.ext import CommandHandler, run_async, Filters
+from telegram.utils.helpers import escape_markdown
 
 from tg_bot import dispatcher
 from tg_bot.modules.disable import DisableAbleCommandHandler
@@ -76,7 +76,7 @@ def get_paste_content(bot: Bot, update: Update, args: List[str]):
                 update.effective_message.reply_text('Unknown error occured')
         r.raise_for_status()
 
-    update.effective_message.reply_text(r.text)
+    update.effective_message.reply_text('```' + escape_markdown(r.text) + '```', parse_mode=ParseMode.MARKDOWN)
 
 @run_async
 def get_paste_stats(bot: Bot, update: Update, args: List[str]):
