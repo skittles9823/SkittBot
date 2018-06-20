@@ -121,11 +121,10 @@ def sudolist(bot: Bot, update: Update):
 @user_admin
 def birthday(bot: Bot, update: Update, args: List[str]):
     if args:
-        username = str(args[0])
+        username = str(args)
     for i in range(10):
-        i = username
         messages = random.choice(MESSAGES)
-        update.effective_message(random.choice(MESSAGES) + i)
+        update.effective_message(messages + username)
 
 __mod_name__ = "Special"
 
