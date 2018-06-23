@@ -19,7 +19,7 @@ def newton(operation: str, message: Message, args: List[str]):
         return
 
     r = requests.get(f'{BASE_URL}/{operation}/{expression}')
-    res = r.json
+    res = r.json()
     message.reply_text({res["result"]})
 
 @run_async
