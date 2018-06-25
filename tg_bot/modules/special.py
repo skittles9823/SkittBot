@@ -124,7 +124,7 @@ def birthday(bot: Bot, update: Update, args: List[str]):
         username = str(args)
     for i in range(10):
         bdaymessage = random.choice(MESSAGES)
-        update.effective_message(bdaymessage + username)
+        update.effective_message.reply_text(bdaymessage + username)
 
 __mod_name__ = "Special"
 
