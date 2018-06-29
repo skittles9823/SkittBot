@@ -55,25 +55,6 @@ def quickunban(bot: Bot, update: Update, args: List[int]):
     except BadRequest as excp:
         update.effective_message.reply_text(excp.message + " " + to_kick)
 
-
-@run_async
-def banall(bot: Bot, update: Update, args: List[int]):
-    if args:
-        chat_id = str(args[0])
-        all_mems = sql.get_chat_members(chat_id)
-    else:
-        chat_id = str(update.effective_chat.id)
-        all_mems = sql.get_chat_members(chat_id)
-    for mems in all_mems:
-        try:
-            bot.kick_chat_member(chat_id, mems.user)
-            update.effective_message.reply_text("Tried banning " + str(mems.user))
-            sleep(0.1)
-        except BadRequest as excp:
-            update.effective_message.reply_text(excp.message + " " + str(mems.user))
-            continue
-
-
 @run_async
 def snipe(bot: Bot, update: Update, args: List[str]):
     try:
@@ -122,9 +103,22 @@ def sudolist(bot: Bot, update: Update):
 def birthday(bot: Bot, update: Update, args: List[str]):
     if args:
         username = str(args)
-    for i in range(10):
+    for i in range(5):
         bdaymessage = random.choice(MESSAGES)
         update.effective_message.reply_text(bdaymessage + username)
+
+    __help__ = """
+*Owner only:*
+- /getlink *chatid*: Get the invite link for a specific chat.
+
+*Sudo only:*
+- /quickscope *chatid* *userid*: Ban user from chat.
+- /quickunban *chatid* *userid*: Unban user from chat.
+- /snipe *chatid* *string*: Make me send a message to a specific chat.
+
+*Admin only:*
+- /birthday *@username*: Spam user with birthday wishes.
+"""
 
 __mod_name__ = "Special"
 
