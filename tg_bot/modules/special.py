@@ -13,7 +13,7 @@ from tg_bot.modules.helper_funcs.chat_status import is_user_ban_protected, bot_a
 import random
 import telegram
 import tg_bot.modules.sql.users_sql as sql
-from tg_bot import dispatcher, OWNER_ID, LOGGER
+from tg_bot import dispatcher, OWNER_ID, SUDO_USERS, LOGGER
 from tg_bot.modules.helper_funcs.filters import CustomFilters
 from tg_bot.modules.disable import DisableAbleCommandHandler
 
@@ -88,7 +88,7 @@ def getlink(bot: Bot, update: Update, args: List[int]):
 
 @run_async
 def sudolist(bot: Bot, update: Update):
-    text = "My sudo users are *{}*:"
+    text = "My sudo users are:"
     for user_id in SUDO_USERS:
         user = bot.get_chat(user_id)
         name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
