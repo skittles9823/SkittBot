@@ -102,7 +102,7 @@ def sudolist(bot: Bot, update: Update):
 @user_admin
 def birthday(bot: Bot, update: Update, args: List[str]):
     if args:
-        username = str(args)
+        username = str(",".join(args))
     for i in range(5):
         bdaymessage = random.choice(MESSAGES)
         update.effective_message.reply_text(bdaymessage + username)
