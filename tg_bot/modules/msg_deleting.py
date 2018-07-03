@@ -1,4 +1,4 @@
-import html
+import html, time
 from typing import Optional, List
 
 from telegram import Message, Chat, Update, Bot, User
@@ -47,13 +47,15 @@ def purge(bot: Bot, update: Update, args: List[str]) -> str:
                 elif err.message != "Message to delete not found":
                     LOGGER.exception("Error while purging chat messages.")
 
-            bot.send_message(chat.id, "Purge complete.")
+            del_msg = bot.send_message(chat.id, "Purge complete.")
             return "<b>{}:</b>" \
                    "\n#PURGE" \
                    "\n<b>Admin:</b> {}" \
                    "\nPurged <code>{}</code> messages.".format(html.escape(chat.title),
                                                                mention_html(user.id, user.first_name),
                                                                delete_to - message_id)
+            time.sleep(2)
+            bot.delete_message(chat.id, del_msg.id)
 
     else:
         msg.reply_text("Reply to a message to select where to start purging from.")
