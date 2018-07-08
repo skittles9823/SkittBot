@@ -10,15 +10,17 @@ from telegram import ParseMode
 from telegram.ext import CommandHandler, run_async, Filters
 from telegram.utils.helpers import escape_markdown, mention_html
 
+from telegram.error import BadRequest
+
 from tg_bot import dispatcher, OWNER_ID, SUDO_USERS, SUPPORT_USERS, WHITELIST_USERS, BAN_STICKER
 from tg_bot.__main__ import GDPR, STATS, USER_INFO
 from tg_bot.modules.disable import DisableAbleCommandHandler
 from tg_bot.modules.helper_funcs.extraction import extract_user
 from tg_bot.modules.helper_funcs.filters import CustomFilters
-from tg_bot.modules.helper_funcs.chat_status import bot_admin, user_admin, can_restrict
+from tg_bot.modules.helper_funcs.chat_status import bot_admin, user_admin, can_restrict, user_is_gbanned
 from tg_bot.modules.translations.strings import tld
 import tg_bot.modules.sql.users_sql as sql
-from tg_bot.modules.sql.safemode_sql import set_safemode, is_safemoded
+from tg_bot.modules.sql.users_sql import set_safemode, is_safemoded
 
 RUN_STRINGS = (
     "Wew dat boi noped de fugg outta here.",

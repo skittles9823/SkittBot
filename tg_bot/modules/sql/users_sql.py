@@ -23,6 +23,7 @@ class Chats(BASE):
     __tablename__ = "chats"
     chat_id = Column(String(14), primary_key=True)
     chat_name = Column(UnicodeText, nullable=False)
+    safemode_status = Column(Boolean, default=False)
 
     def __init__(self, chat_id, chat_name):
         self.chat_id = str(chat_id)
@@ -135,6 +136,22 @@ def get_user_num_chats(user_id):
     try:
         return SESSION.query(ChatMembers).filter(ChatMembers.user == int(user_id)).count()
     finally:
+        SESSION.close()
+
+
+def set_safemode(chat_id, safemode_status):
+    with INSERTION_LOCK:
+        curr = SESSION.query(Chats).get(str(chat_id))
+        if not curr:
+            curr = Chats(str(chat_id), chat_name)
+        curr.safemode_status = safemode_status
+
+        SESSION.add(curr)
+        SESSION.commit()
+
+
+def is_safemoded(chat_id):
+        return SESSION.query(Chats).get((str(chat_id)))
         SESSION.close()
 
 
