@@ -18,7 +18,7 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = 'sqldbtype://username:pw@hostname:port/db_name'  # needed for any database modules
     MESSAGE_DUMP = None  # needed to make sure 'save from' messages persist
     LOAD = []
-    NO_LOAD = ['translation', 'rss']
+    NO_LOAD = ['translation', 'rss', 'birthday']
     WEBHOOK = False
     URL = None
 
