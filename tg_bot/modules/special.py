@@ -13,7 +13,7 @@ from tg_bot.modules.helper_funcs.chat_status import is_user_ban_protected, user_
 import random
 import telegram
 import tg_bot.modules.sql.users_sql as sql
-from tg_bot import dispatcher, OWNER_ID, SUDO_USERS, LOGGER
+from tg_bot import dispatcher, OWNER_ID, SUDO_USERS, SUPPORT_USERS, LOGGER
 from tg_bot.modules.helper_funcs.filters import CustomFilters
 from tg_bot.modules.disable import DisableAbleCommandHandler
 
@@ -89,16 +89,23 @@ def getlink(bot: Bot, update: Update, args: List[int]):
             update.effective_message.reply_text(excp.message + " " + str(chat_id))
 
 @run_async
-def sudolist(bot: Bot, update: Update):
-    text = "My sudo users are:"
+def slist(bot: Bot, update: Update):
+    text1 = "My sudo users are:"
     for user_id in SUDO_USERS:
         user = bot.get_chat(user_id)
         name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
         if user.username:
             name = escape_markdown("@" + user.username)
-        text += "\n - {}".format(name)
+        text1 += "\n - {}".format(name)
+    text2 = "My support users are:"
+    for user_id in SUPPORT_USERS:
+        user = bot.get_chat(user_id)
+        name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
+        if user.username:
+            name = escape_markdown("@" + user.username)
+        text2 += "\n - {}".format(name)
 
-    update.effective_message.reply_text(text, parse_mode=ParseMode.MARKDOWN)
+    update.effective_message.reply_text(text1 + "\n" + text2, parse_mode=ParseMode.MARKDOWN)
 
 @run_async
 @user_admin
@@ -128,7 +135,7 @@ SNIPE_HANDLER = CommandHandler("snipe", snipe, pass_args=True, filters=CustomFil
 QUICKSCOPE_HANDLER = CommandHandler("quickscope", quickscope, pass_args=True, filters=CustomFilters.sudo_filter)
 QUICKUNBAN_HANDLER = CommandHandler("quickunban", quickunban, pass_args=True, filters=CustomFilters.sudo_filter)
 GETLINK_HANDLER = CommandHandler("getlink", getlink, pass_args=True, filters=Filters.user(OWNER_ID))
-SLIST_HANDLER = CommandHandler("sudolist", sudolist, filters=Filters.user(OWNER_ID))
+SLIST_HANDLER = CommandHandler("slist", slist, filters=Filters.user(OWNER_ID))
 BIRTHDAY_HANDLER = CommandHandler("birthday", birthday, pass_args=True, filters=Filters.group)
 
 dispatcher.add_handler(SNIPE_HANDLER)
