@@ -8,7 +8,7 @@ from telegram.error import BadRequest
 from telegram.ext import MessageHandler, Filters, CommandHandler
 from telegram.ext.dispatcher import run_async
 from telegram.utils.helpers import escape_markdown
-from tg_bot.modules.helper_funcs.chat_status import is_user_ban_protected, bot_admin, user_admin
+from tg_bot.modules.helper_funcs.chat_status import is_user_ban_protected, user_admin
 
 import random
 import telegram
@@ -72,7 +72,6 @@ def snipe(bot: Bot, update: Update, args: List[str]):
 
 
 @run_async
-@bot_admin
 def getlink(bot: Bot, update: Update, args: List[int]):
     if args:
         chat_id = int(args[0])
