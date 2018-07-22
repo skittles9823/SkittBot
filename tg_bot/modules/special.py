@@ -105,7 +105,8 @@ def slist(bot: Bot, update: Update):
             name = escape_markdown("@" + user.username)
         text2 += "\n - {}".format(name)
 
-    update.effective_message.reply_text(text1 + "\n" + text2, parse_mode=ParseMode.MARKDOWN)
+    update.effective_message.reply_text(text1 + "\n", parse_mode=ParseMode.MARKDOWN)
+    update.effective_message.reply_text(text2 + "\n", parse_mode=ParseMode.MARKDOWN)
 
 @run_async
 @user_admin
