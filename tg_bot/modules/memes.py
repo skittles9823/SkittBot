@@ -71,7 +71,7 @@ def stretch(bot: Bot, update: Update):
     message.reply_to_message.reply_text(reply_text)
     
 @run_async
-def vapor(bot: Bot, update: Update):
+def vapor(bot: Bot, update: Update, args: List[str]):
     message = update.effective_message
     
     if message.reply_to_message:
@@ -100,7 +100,7 @@ BMOJI_HANDLER = DisableAbleCommandHandler("🅱️", bmoji)
 BMOJI_ALIAS_HANDLER = DisableAbleCommandHandler("bmoji", bmoji)
 OWO_HANDLER = DisableAbleCommandHandler("owo", owo)
 STRETCH_HANDLER = DisableAbleCommandHandler("stretch", stretch)
-VAPOR_HANDLER = DisableAbleCommandHandler("vapor", vapor)
+VAPOR_HANDLER = DisableAbleCommandHandler("vapor", vapor, pass_args=True)
 
 dispatcher.add_handler(COPYPASTA_HANDLER)
 dispatcher.add_handler(COPYPASTA_ALIAS_HANDLER)
