@@ -60,6 +60,13 @@ def owo(bot: Bot, update: Update):
     reply_text = reply_text.replace("ove", "uv")
     reply_text += ' ' + random.choice(faces)
     message.reply_to_message.reply_text(reply_text)
+    
+@run_async
+def stretch(bot: Bot, update: Update):
+    message = update.effective_message
+    count = random.randint(3, 10)
+    reply_text = re.sub(r'([aeiouAEIOU])', (r'\1' * count), message.reply_to_message.text)
+    message.reply_to_message.reply_text(reply_text)
 
 # no help string
 __help__ = """
@@ -76,6 +83,7 @@ CLAPMOJI_ALIAS_HANDLER = DisableAbleCommandHandler("👏", clapmoji)
 BMOJI_HANDLER = DisableAbleCommandHandler("🅱️", bmoji)
 BMOJI_ALIAS_HANDLER = DisableAbleCommandHandler("bmoji", bmoji)
 OWO_HANDLER = DisableAbleCommandHandler("owo", owo)
+STRETCH_HANDLER = DisableAbleCommandHandler("stretch", stretch)
 
 dispatcher.add_handler(COPYPASTA_HANDLER)
 dispatcher.add_handler(COPYPASTA_ALIAS_HANDLER)
@@ -84,3 +92,4 @@ dispatcher.add_handler(CLAPMOJI_ALIAS_HANDLER)
 dispatcher.add_handler(BMOJI_HANDLER)
 dispatcher.add_handler(BMOJI_ALIAS_HANDLER)
 dispatcher.add_handler(OWO_HANDLER)
+dispatcher.add_handler(STRETCH_HANDLER)
