@@ -65,7 +65,7 @@ def owo(bot: Bot, update: Update):
 def stretch(bot: Bot, update: Update):
     message = update.effective_message
     count = random.randint(3, 10)
-    reply_text = re.sub(r'([aeiouAEIOU])', ('$1' * count), message.reply_to_message.text)
+    reply_text = re.sub(r'([aeiouAEIOU])', ('\1' * count), message.reply_to_message.text)
     message.reply_to_message.reply_text(reply_text)
 
 # no help string
