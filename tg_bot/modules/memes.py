@@ -6,7 +6,7 @@ from telegram.ext import Filters, MessageHandler, run_async
 from tg_bot import dispatcher
 from tg_bot.modules.disable import DisableAbleCommandHandler
 
-WIDE_MAP = dict((i, i + 0xFEE0) for i in xrange(0x21, 0x7F))
+WIDE_MAP = dict((i, i + 0xFEE0) for i in range(0x21, 0x7F))
 WIDE_MAP[0x20] = 0x3000
 
 # D A N K module by @deletescape - based on https://github.com/wrxck/mattata/blob/master/plugins/copypasta.mattata
