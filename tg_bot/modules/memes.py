@@ -55,12 +55,18 @@ def clapmoji(bot: Bot, update: Update):
 def owo(bot: Bot, update: Update):
     message = update.effective_message
     faces = ['(・`ω´・)',';;w;;','owo','UwU','>w<','^w^','\(^o\) (/o^)/','( ^ _ ^)∠☆','(ô_ô)','~:o',';____;', '(*^*)', '(>_', '(♥_♥)', '*(^O^)*', '((+_+))']
-    reply_text = re.sub(r'(r|l)', "w", message.reply_to_message.text)
-    reply_text = re.sub(r'(R|L)', 'W', reply_text)
-    reply_text = re.sub(r'n([aeiou])', r'ny\1', reply_text)
+    reply_text = re.sub(r'[rl]', "w", message.reply_to_message.text)
+    reply_text = re.sub(r'[ｒｌ]', "ｗ", message.reply_to_message.text)
+    reply_text = re.sub(r'[RL]', 'W', reply_text)
+    reply_text = re.sub(r'[ＲＬ]', 'Ｗ', reply_text)
+    reply_text = re.sub(r'n([aeiouａｅｉｏｕ])', r'ny\1', reply_text)
+    reply_text = re.sub(r'ｎ([ａｅｉｏｕ])', r'ｎｙ\1', reply_text)
     reply_text = re.sub(r'N([aeiouAEIOU])', r'Ny\1', reply_text)
+    reply_text = re.sub(r'Ｎ([ａｅｉｏｕＡＥＩＯＵ])', r'Ｎｙ\1', reply_text)
     reply_text = re.sub(r'\!+', ' ' + random.choice(faces), reply_text)
+    reply_text = re.sub(r'！+', ' ' + random.choice(faces), reply_text)
     reply_text = reply_text.replace("ove", "uv")
+    reply_text = reply_text.replace("ｏｖｅ", "ｕｖ")
     reply_text += ' ' + random.choice(faces)
     message.reply_to_message.reply_text(reply_text)
     
@@ -68,7 +74,7 @@ def owo(bot: Bot, update: Update):
 def stretch(bot: Bot, update: Update):
     message = update.effective_message
     count = random.randint(3, 10)
-    reply_text = re.sub(r'([aeiouAEIOU])', (r'\1' * count), message.reply_to_message.text)
+    reply_text = re.sub(r'([aeiouAEIOUａｅｉｏｕＡＥＩＯＵ])', (r'\1' * count), message.reply_to_message.text)
     message.reply_to_message.reply_text(reply_text)
     
 @run_async
