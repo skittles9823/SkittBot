@@ -1,4 +1,5 @@
 import random, re
+from typing import Optional, List
 from telegram import Message, Update, Bot, User
 from telegram import MessageEntity
 from telegram.ext import Filters, MessageHandler, run_async
@@ -6,6 +7,8 @@ from telegram.ext import Filters, MessageHandler, run_async
 from tg_bot import dispatcher
 from tg_bot.modules.disable import DisableAbleCommandHandler
 
+WIDE_MAP = dict((i, i + 0xFEE0) for i in range(0x21, 0x7F))
+WIDE_MAP[0x20] = 0x3000
 
 # D A N K module by @deletescape - based on https://github.com/wrxck/mattata/blob/master/plugins/copypasta.mattata
 
@@ -52,12 +55,18 @@ def clapmoji(bot: Bot, update: Update):
 def owo(bot: Bot, update: Update):
     message = update.effective_message
     faces = ['(・`ω´・)',';;w;;','owo','UwU','>w<','^w^','\(^o\) (/o^)/','( ^ _ ^)∠☆','(ô_ô)','~:o',';____;', '(*^*)', '(>_', '(♥_♥)', '*(^O^)*', '((+_+))']
-    reply_text = re.sub(r'(r|l)', "w", message.reply_to_message.text)
-    reply_text = re.sub(r'(R|L)', 'W', reply_text)
-    reply_text = re.sub(r'n([aeiou])', r'ny\1', reply_text)
+    reply_text = re.sub(r'[rl]', "w", message.reply_to_message.text)
+    reply_text = re.sub(r'[ｒｌ]', "ｗ", message.reply_to_message.text)
+    reply_text = re.sub(r'[RL]', 'W', reply_text)
+    reply_text = re.sub(r'[ＲＬ]', 'Ｗ', reply_text)
+    reply_text = re.sub(r'n([aeiouａｅｉｏｕ])', r'ny\1', reply_text)
+    reply_text = re.sub(r'ｎ([ａｅｉｏｕ])', r'ｎｙ\1', reply_text)
     reply_text = re.sub(r'N([aeiouAEIOU])', r'Ny\1', reply_text)
+    reply_text = re.sub(r'Ｎ([ａｅｉｏｕＡＥＩＯＵ])', r'Ｎｙ\1', reply_text)
     reply_text = re.sub(r'\!+', ' ' + random.choice(faces), reply_text)
+    reply_text = re.sub(r'！+', ' ' + random.choice(faces), reply_text)
     reply_text = reply_text.replace("ove", "uv")
+    reply_text = reply_text.replace("ｏｖｅ", "ｕｖ")
     reply_text += ' ' + random.choice(faces)
     message.reply_to_message.reply_text(reply_text)
     
@@ -65,7 +74,21 @@ def owo(bot: Bot, update: Update):
 def stretch(bot: Bot, update: Update):
     message = update.effective_message
     count = random.randint(3, 10)
-    reply_text = re.sub(r'([aeiouAEIOU])', (r'\1' * count), message.reply_to_message.text)
+    reply_text = re.sub(r'([aeiouAEIOUａｅｉｏｕＡＥＩＯＵ])', (r'\1' * count), message.reply_to_message.text)
+    message.reply_to_message.reply_text(reply_text)
+    
+@run_async
+def vapor(bot: Bot, update: Update, args: List[str]):
+    message = update.effective_message
+    
+    if message.reply_to_message:
+        data = message.reply_to_message.text
+    elif len(args) >= 1:
+        data = message.text.split(None, 1)[1]
+    else:
+        data = ''
+        
+    reply_text = str(data).translate(WIDE_MAP)
     message.reply_to_message.reply_text(reply_text)
 
 # no help string
@@ -84,6 +107,7 @@ BMOJI_HANDLER = DisableAbleCommandHandler("🅱️", bmoji)
 BMOJI_ALIAS_HANDLER = DisableAbleCommandHandler("bmoji", bmoji)
 OWO_HANDLER = DisableAbleCommandHandler("owo", owo)
 STRETCH_HANDLER = DisableAbleCommandHandler("stretch", stretch)
+VAPOR_HANDLER = DisableAbleCommandHandler("vapor", vapor, pass_args=True)
 
 dispatcher.add_handler(COPYPASTA_HANDLER)
 dispatcher.add_handler(COPYPASTA_ALIAS_HANDLER)
@@ -93,3 +117,4 @@ dispatcher.add_handler(BMOJI_HANDLER)
 dispatcher.add_handler(BMOJI_ALIAS_HANDLER)
 dispatcher.add_handler(OWO_HANDLER)
 dispatcher.add_handler(STRETCH_HANDLER)
+dispatcher.add_handler(VAPOR_HANDLER)
