@@ -1,4 +1,4 @@
-import html, time
+import html
 from typing import Optional, List
 
 from telegram import Message, Chat, Update, Bot, User
@@ -8,12 +8,11 @@ from telegram.ext import MessageHandler, Filters, CommandHandler, run_async
 from telegram.utils.helpers import mention_markdown, mention_html, escape_markdown
 
 import tg_bot.modules.sql.welcome_sql as sql
-from tg_bot.modules.sql.safemode_sql import is_safemoded
 from tg_bot import dispatcher, OWNER_ID, LOGGER
-from tg_bot.modules.helper_funcs.chat_status import user_admin, can_delete, is_user_ban_protected
+from tg_bot.modules.helper_funcs.chat_status import user_admin, can_delete
 from tg_bot.modules.helper_funcs.misc import build_keyboard, revert_buttons
 from tg_bot.modules.helper_funcs.msg_types import get_welcome_type
-from tg_bot.modules.helper_funcs.string_handling import button_markdown_parser, markdown_parser, \
+from tg_bot.modules.helper_funcs.string_handling import markdown_parser, \
     escape_invalid_curly_brackets
 from tg_bot.modules.log_channel import loggable
 
@@ -80,21 +79,11 @@ def send(update, message, keyboard, backup_message):
 @run_async
 def new_member(bot: Bot, update: Update):
     chat = update.effective_chat  # type: Optional[Chat]
-    new_members = update.effective_message.new_chat_members
-
-    for mems in new_members:
-        if is_user_ban_protected(chat, mems.id, chat.get_member(mems.id)):
-            continue
-        if is_safemoded(chat.id).safemode_status:
-            try:
-                bot.restrict_chat_member(chat.id, mems.id, can_send_messages=True, can_send_media_messages=False, can_send_other_messages=False, can_add_web_page_previews=False, until_date=(int(time.time() + 24 * 60 * 60)))
-            except BadRequest as excp:
-                LOGGER.warning(update)
-                LOGGER.exception("ERROR muting user %s in chat %s (%s) due to %s", mems.id, chat.title, chat.id, excp.message)
 
     should_welc, cust_welcome, welc_type = sql.get_welc_pref(chat.id)
     if should_welc:
         sent = None
+        new_members = update.effective_message.new_chat_members
         for new_mem in new_members:
             # Give the owner a special welcome
             if new_mem.id == OWNER_ID:
