@@ -5,7 +5,7 @@ from tg_bot.modules.sql import SESSION, BASE
 class Safemode(BASE):
     __tablename__="Safemode"
     chat_id = Column(String(14), primary_key=True)
-    safemode_status = Column(Boolean)
+    safemode_status = Column(Boolean, default=False)
 
     def __init__(self, chat_id, safemode_status=False):
         self.chat_id = str(chat_id) # ensure string
