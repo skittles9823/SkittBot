@@ -152,7 +152,7 @@ BMOJI_ALIAS_HANDLER = DisableAbleCommandHandler("bmoji", bmoji)
 OWO_HANDLER = DisableAbleCommandHandler("owo", owo)
 STRETCH_HANDLER = DisableAbleCommandHandler("stretch", stretch)
 VAPOR_HANDLER = DisableAbleCommandHandler("vapor", vapor, pass_args=True)
-MOCK_HANDLER = DisableAbleCommandHandler("mock", spongemocktext)
+MOCK_HANDLER = DisableAbleCommandHandler("mock", spongemocktext, admin_ok=True)
 ZALGO_HANDLER = DisableAbleCommandHandler("zalgofy", zalgotext)
 
 dispatcher.add_handler(COPYPASTA_HANDLER)
