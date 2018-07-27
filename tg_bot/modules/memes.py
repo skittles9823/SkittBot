@@ -89,10 +89,11 @@ def vapor(bot: Bot, update: Update, args: List[str]):
     message = update.effective_message
 
     if not message.reply_to_message:
-        noreply = True
-        data = message.text.split(None, 1)[1]
         if not args:
             message.reply_text("I need a message to convert to vaporwave text.")
+        else:
+            noreply = True
+            data = message.text.split(None, 1)[1]
     elif message.reply_to_message:
         noreply = False
         data = message.reply_to_message.text
