@@ -87,16 +87,23 @@ def stretch(bot: Bot, update: Update):
 @run_async
 def vapor(bot: Bot, update: Update, args: List[str]):
     message = update.effective_message
-    
-    if message.reply_to_message:
-        data = message.reply_to_message.text
-    elif len(args) >= 1:
+
+    if not message.reply_to_message:
+        noreply = True
         data = message.text.split(None, 1)[1]
+        if no args:
+            message.reply_text("I need a message to convert to vaporwave text.")
+    elif message.reply_to_message:
+        noreply = False
+        data = message.reply_to_message.text
     else:
         data = ''
-        
+
     reply_text = str(data).translate(WIDE_MAP)
-    message.reply_to_message.reply_text(reply_text)
+    if noreply:
+        message.reply_text(reply_text)
+    else:
+        message.reply_to_message.reply_text(reply_text)
 
 # D A N K modules by @deletescape ^^^
 # Less D A N K modules by @skittles9823 # holi fugg I did some maymays vvv
@@ -111,6 +118,7 @@ def spongemocktext(bot: Bot, update: Update):
        
     reply_text = spongemock.mock(data)
     message.reply_to_message.reply_text(reply_text)
+
 
 @run_async
 def zalgotext(bot: Bot, update: Update):
