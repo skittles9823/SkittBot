@@ -8,3 +8,4 @@ feedparser
 pynewtonmath
 #memes vvv
 spongemock
+zalgo-text

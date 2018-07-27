@@ -1,5 +1,6 @@
 import random, re
 from spongemock import spongemock
+from zalgo_text import zalgo
 
 from typing import Optional, List
 from telegram import Message, Update, Bot, User
@@ -111,6 +112,18 @@ def spongemocktext(bot: Bot, update: Update):
     reply_text = spongemock.mock(data)
     message.reply_to_message.reply_text(reply_text)
 
+@run_async
+def zalgotext(bot: Bot, update: Update):
+    message = update.effective_message    
+    if message.reply_to_message:
+        data = message.reply_to_message.text
+    else:
+        data = ''
+
+    z = zalgo.zalgo()
+    reply_text = z.zalgofy(data)
+    message.reply_to_message.reply_text(reply_text)
+
 # Less D A N K modules by @skittles9823 # holi fugg I did some maymays ^^^
 
 # no help string
@@ -131,6 +144,7 @@ OWO_HANDLER = DisableAbleCommandHandler("owo", owo)
 STRETCH_HANDLER = DisableAbleCommandHandler("stretch", stretch)
 VAPOR_HANDLER = DisableAbleCommandHandler("vapor", vapor, pass_args=True)
 MOCK_HANDLER = DisableAbleCommandHandler("mock", spongemocktext)
+ZALGO_HANDLER = DisableAbleCommandHandler("zalgofy", zalgotext)
 
 dispatcher.add_handler(COPYPASTA_HANDLER)
 dispatcher.add_handler(COPYPASTA_ALIAS_HANDLER)
@@ -142,3 +156,4 @@ dispatcher.add_handler(OWO_HANDLER)
 dispatcher.add_handler(STRETCH_HANDLER)
 dispatcher.add_handler(VAPOR_HANDLER)
 dispatcher.add_handler(MOCK_HANDLER)
+dispatcher.add_handler(ZALGO_HANDLER)
