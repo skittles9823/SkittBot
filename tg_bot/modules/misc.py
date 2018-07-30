@@ -422,7 +422,7 @@ __help__ = """
 
 __mod_name__ = "Misc"
 
-ID_HANDLER = DisableAbleCommandHandler("id", get_id, pass_args=True)
+ID_HANDLER = DisableAbleCommandHandler("id", get_id, pass_args=True, admin_ok=True)
 IP_HANDLER = CommandHandler("ip", get_bot_ip, filters=Filters.chat(OWNER_ID))
 
 TIME_HANDLER = CommandHandler("time", get_time, pass_args=True)
@@ -430,8 +430,8 @@ TIME_HANDLER = CommandHandler("time", get_time, pass_args=True)
 SAFEMODE_HANDLER = CommandHandler("safemode", safe_mode, pass_args=True)
 RUNS_HANDLER = DisableAbleCommandHandler("runs", runs)
 SLAP_HANDLER = DisableAbleCommandHandler("slap", slap, pass_args=True)
-INFO_HANDLER = DisableAbleCommandHandler("info", info, pass_args=True)
-PING_HANDLER = DisableAbleCommandHandler("ping", ping)
+INFO_HANDLER = DisableAbleCommandHandler("info", info, pass_args=True, admin_ok=True)
+PING_HANDLER = DisableAbleCommandHandler("ping", ping, admin_ok=True)
 ECHO_HANDLER = CommandHandler("echo", echo, filters=Filters.user(OWNER_ID))
 MD_HELP_HANDLER = CommandHandler("markdownhelp", markdown_help, filters=Filters.private)
 

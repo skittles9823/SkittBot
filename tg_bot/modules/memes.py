@@ -142,25 +142,19 @@ __help__ = """
 """
 
 __mod_name__ = "Memes"
-
-COPYPASTA_HANDLER = DisableAbleCommandHandler("copypasta", copypasta)
-COPYPASTA_ALIAS_HANDLER = DisableAbleCommandHandler("😂", copypasta)
-CLAPMOJI_HANDLER = DisableAbleCommandHandler("clapmoji", clapmoji)
-CLAPMOJI_ALIAS_HANDLER = DisableAbleCommandHandler("👏", clapmoji)
-BMOJI_HANDLER = DisableAbleCommandHandler("🅱", bmoji)
-BMOJI_ALIAS_HANDLER = DisableAbleCommandHandler("bmoji", bmoji)
-OWO_HANDLER = DisableAbleCommandHandler("owo", owo)
+(["notes", "saved"],
+COPYPASTA_HANDLER = DisableAbleCommandHandler(["copypasta", "😂"], copypasta)
+CLAPMOJI_HANDLER = DisableAbleCommandHandler(["clapmoji", "👏"], clapmoji, admin_ok=True)
+BMOJI_HANDLER = DisableAbleCommandHandler(["🅱", "bmoji"], bmoji)
+OWO_HANDLER = DisableAbleCommandHandler("owo", owo, admin_ok=True)
 STRETCH_HANDLER = DisableAbleCommandHandler("stretch", stretch)
 VAPOR_HANDLER = DisableAbleCommandHandler("vapor", vapor, pass_args=True)
 MOCK_HANDLER = DisableAbleCommandHandler("mock", spongemocktext, admin_ok=True)
 ZALGO_HANDLER = DisableAbleCommandHandler("zalgofy", zalgotext)
 
 dispatcher.add_handler(COPYPASTA_HANDLER)
-dispatcher.add_handler(COPYPASTA_ALIAS_HANDLER)
 dispatcher.add_handler(CLAPMOJI_HANDLER)
-dispatcher.add_handler(CLAPMOJI_ALIAS_HANDLER)
 dispatcher.add_handler(BMOJI_HANDLER)
-dispatcher.add_handler(BMOJI_ALIAS_HANDLER)
 dispatcher.add_handler(OWO_HANDLER)
 dispatcher.add_handler(STRETCH_HANDLER)
 dispatcher.add_handler(VAPOR_HANDLER)
