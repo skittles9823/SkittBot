@@ -57,10 +57,12 @@ def getlink(bot: Bot, update: Update, args: List[int]):
             bot_member = chat.get_member(bot.id)
             if bot_member.can_invite_users:
                 invitelink = bot.exportChatInviteLink(chat_id)
-                update.effective_message.reply_text(invitelink)
+                update.effective_message.reply_text("Invite link for: " + chat_id + "\n" + invitelink)
             else:
                 update.effective_message.reply_text("I don't have access to the invite link.")
         except BadRequest as excp:
+                update.effective_message.reply_text(excp.message + " " + str(chat_id))
+        except TelegramError as excp:
                 update.effective_message.reply_text(excp.message + " " + str(chat_id))
 
 @run_async
