@@ -26,7 +26,7 @@ def paste(bot: Bot, update: Update, args: List[str]):
         message.reply_text("What am I supposed to do with this?!")
         return
 
-    r = requests.post(f'{BASE_URL}/documents', data=data)
+    r = requests.post(f'{BASE_URL}/documents', data=data.encode('utf-8'))
 
     if r.status_code == 404:
         update.effective_message.reply_text('Failed to reach dogbin')
