@@ -65,7 +65,7 @@ def owo(bot: Bot, update: Update):
     reply_text = re.sub(r'[RL]', 'W', reply_text)
     reply_text = re.sub(r'[ＲＬ]', 'Ｗ', reply_text)
     reply_text = re.sub(r'[rr]', "w", message.reply_to_message.text)
-    reply_text = re.sub(r'[RR]', "w", message.reply_to_message.text
+    reply_text = re.sub(r'[RR]', "w", message.reply_to_message.text)
     reply_text = re.sub(r'n([aeiouａｅｉｏｕ])', r'ny\1', reply_text)
     reply_text = re.sub(r'ｎ([ａｅｉｏｕ])', r'ｎｙ\1', reply_text)
     reply_text = re.sub(r'N([aeiouAEIOU])', r'Ny\1', reply_text)
