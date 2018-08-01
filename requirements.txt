@@ -9,3 +9,4 @@ pynewtonmath
 #memes vvv
 spongemock
 zalgo-text
+geopy
