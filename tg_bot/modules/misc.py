@@ -17,7 +17,7 @@ from tg_bot.modules.disable import DisableAbleCommandHandler
 from tg_bot.modules.helper_funcs.extraction import extract_user
 from tg_bot.modules.helper_funcs.filters import CustomFilters
 from tg_bot.modules.helper_funcs.chat_status import bot_admin, user_admin, can_restrict
-from tg_bot.modules.sql.safemode_sql import set_safemode, is_safemoded
+from tg_bot.modules.sql.safemode_sql import set_safemode, is_safemoded, strong_safemode
 
 RUN_STRINGS = (
     "Wew dat boi noped de fugg outta here.",
@@ -341,13 +341,21 @@ def safe_mode(bot: Bot, update: Update, args: List[str]):
         message.reply_text("This chat has its Safe Mode set to *{}*".format(is_safemoded(chat.id).safemode_status), parse_mode=ParseMode.MARKDOWN)
         return
 
-    if str(args[0]).lower() in ["on", "yes"]:
+    if str(args[0]).lower() in ["on"]:
         set_safemode(chat.id, True)
+        strong_safemode(chat.id, False)
         message.reply_text("Safe Mode has been set to *{}*".format(is_safemoded(chat.id).safemode_status), parse_mode=ParseMode.MARKDOWN)
         return
 
-    elif str(args[0]).lower() in ["off", "no"]:
+    elif str(args[0]).lower() in ["strong"]:
+        set_safemode(chat.id, True)
+        strong_safemode(chat.id, True)
+        message.reply_text("Safe Mode has been set to *{}*".format(is_safemoded(chat.id).safemode_status), parse_mode=ParseMode.MARKDOWN)
+        return
+
+    elif str(args[0]).lower() in ["off"]:
         set_safemode(chat.id, False)
+        strong_safemode(chat.id, False)
         message.reply_text("Safe Mode has been set to *{}*".format(is_safemoded(chat.id).safemode_status), parse_mode=ParseMode.MARKDOWN)
         return
     else:

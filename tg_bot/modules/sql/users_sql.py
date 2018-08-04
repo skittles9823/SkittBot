@@ -46,11 +46,13 @@ class ChatMembers(BASE):
                              onupdate="CASCADE",
                              ondelete="CASCADE"),
                   nullable=False)
-    __table_args__ = (UniqueConstraint('chat', 'user', name='_chat_members_uc'),)
+    spamcheck = Column(Boolean, default=False)
+    __table_args__ = (UniqueConstraint('chat', 'user', 'spamcheck', name='_chat_members_uc'),)
 
-    def __init__(self, chat, user):
+    def __init__(self, chat, user, spamcheck):
         self.chat = chat
         self.user = user
+        self.spamcheck = spamcheck
 
     def __repr__(self):
         return "<Chat user {} ({}) in chat {} ({})>".format(self.user.username, self.user.user_id,
@@ -148,6 +150,13 @@ def num_chats():
 def num_users():
     try:
         return SESSION.query(Users).count()
+    finally:
+        SESSION.close()
+
+
+def get_spam_status(user_id):
+    try:
+        return SESSION.query(ChatMembers).filter(ChatMembers.spamcheck == str(chat_id)).all()
     finally:
         SESSION.close()
 
