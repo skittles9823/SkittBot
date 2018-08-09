@@ -41,7 +41,7 @@ def get(bot, update, notename, show_none=True):
     message = update.effective_message  # type: Optional[Message]
 
     if note:
-        # If not is replying to a message, reply to that message (unless its an error)
+        # If we are replying to a message, reply to that message (unless it is an error)
         if message.reply_to_message:
             reply_text = message.reply_to_message.reply_text
         else:
