@@ -15,7 +15,7 @@ from tg_bot.modules.disable import DisableAbleCommandHandler
 from tg_bot.modules.helper_funcs.chat_status import user_admin
 from tg_bot.modules.helper_funcs.misc import build_keyboard, revert_buttons
 from tg_bot.modules.helper_funcs.msg_types import get_note_type
-
+from tg_bot.modules.sql.remote_sql import get_connected_chat
 FILE_MATCHER = re.compile(r"^###file_id(!photo)?###:(.*?)(?:\s|$)")
 
 ENUM_FUNC_MAP = {
@@ -31,17 +31,21 @@ ENUM_FUNC_MAP = {
 
 
 # Do not async
-def get(bot, update, notename, show_none=True, no_format=False):
-    chat_id = update.effective_chat.id
+def get(bot, update, notename, show_none=True):
+    if not get_connected_chat(update.effective_message.from_user.id):
+        chat_id = update.effective_chat.id
+    else:
+        chat_id = get_connected_chat(update.effective_message.from_user.id).chat_id
+
     note = sql.get_note(chat_id, notename)
     message = update.effective_message  # type: Optional[Message]
 
     if note:
-        # If we're replying to a message, reply to that message (unless it's an error)
+        # If we are replying to a message, reply to that message (unless it is an error)
         if message.reply_to_message:
-            reply_id = message.reply_to_message.message_id
+            reply_text = message.reply_to_message.reply_text
         else:
-            reply_id = message.message_id
+            reply_text = message.reply_text
 
         if note.is_reply:
             if MESSAGE_DUMP:
@@ -67,28 +71,16 @@ def get(bot, update, notename, show_none=True, no_format=False):
                     else:
                         raise
         else:
-            text = note.value
             keyb = []
-            parseMode = ParseMode.MARKDOWN
-            buttons = sql.get_buttons(chat_id, notename)
-            if no_format:
-                parseMode = None
-                text += revert_buttons(buttons)
-            else:
+            if note.has_buttons:
+                buttons = (sql.get_buttons(chat_id, notename)).lower()
                 keyb = build_keyboard(buttons)
 
             keyboard = InlineKeyboardMarkup(keyb)
-
             try:
-                if note.msgtype in (sql.Types.BUTTON_TEXT, sql.Types.TEXT):
-                    bot.send_message(chat_id, text, reply_to_message_id=reply_id,
-                                     parse_mode=parseMode, disable_web_page_preview=True,
-                                     reply_markup=keyboard)
-                else:
-                    ENUM_FUNC_MAP[note.msgtype](chat_id, note.file, caption=text, reply_to_message_id=reply_id,
-                                                parse_mode=parseMode, disable_web_page_preview=True,
-                                                reply_markup=keyboard)
-
+                reply_text(note.value, parse_mode=ParseMode.MARKDOWN,
+                           disable_web_page_preview=True,
+                           reply_markup=keyboard)
             except BadRequest as excp:
                 if excp.message == "Entity_mention_user_invalid":
                     message.reply_text("Looks like you tried to mention someone I've never seen before. If you really "
