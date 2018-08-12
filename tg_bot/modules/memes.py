@@ -20,10 +20,6 @@ from tg_bot.modules.disable import DisableAbleCommandHandler
 WIDE_MAP = dict((i, i + 0xFEE0) for i in range(0x21, 0x7F))
 WIDE_MAP[0x20] = 0x3000
 
-# only use one event loop for the stupid face recognition
-loop = asyncio.new_event_loop()
-asyncio.set_event_loop(loop)
-
 # D A N K modules by @deletescape vvv
 
 # based on https://github.com/wrxck/mattata/blob/master/plugins/copypasta.mattata
@@ -189,8 +185,9 @@ def deepfryer(bot: Bot, update: Update):
     image = Image.open(io.BytesIO(photodata))
 
     # the following needs to be executed async (because dumb lib)
-    global loop
+    loop = asyncio.new_event_loop()
     loop.run_until_complete(process_deepfry(image, message.reply_to_message, bot))
+    loop.close()
 
 async def process_deepfry(image: Image, reply: Message, bot: Bot):
     # DEEPFRY IT
@@ -203,9 +200,9 @@ async def process_deepfry(image: Image, reply: Message, bot: Bot):
     bio = BytesIO()
     bio.name = 'image.jpeg'
     image.save(bio, 'JPEG')
-    bio.seek(0)
 
     # send it back
+    bio.seek(0)
     reply.reply_photo(bio)
 
 # shitty maymay modules made by @divadsn ^^^
