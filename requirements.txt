@@ -10,3 +10,4 @@ pynewtonmath
 spongemock
 zalgo-text
 geopy
+nltk

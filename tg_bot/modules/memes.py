@@ -2,6 +2,10 @@ import random, re
 from spongemock import spongemock
 from zalgo_text import zalgo
 
+import nltk # shitty lib, but it does work
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+
 from typing import Optional, List
 from telegram import Message, Update, Bot, User
 from telegram import MessageEntity
@@ -134,6 +138,33 @@ def zalgotext(bot: Bot, update: Update):
     message.reply_to_message.reply_text(reply_text)
 
 # Less D A N K modules by @skittles9823 # holi fugg I did some maymays ^^^
+# shitty maymay modules made by @divadsn vvv
+
+@run_async
+def forbesify(bot: Bot, update: Update):
+    message = update.effective_message
+    if message.reply_to_message:
+        data = message.reply_to_message.text
+    else:
+        data = ''
+
+    accidentals = ['VB', 'VBD', 'VBG', 'VBN']
+    reply_text = data.title()
+
+    # use NLTK to find out where verbs are
+    tokens = nltk.word_tokenize(data)
+    tagged = nltk.pos_tag(tokens)
+
+    # let's go through every token and check if it's a verb
+    # if yes, then let's forbesify ( ͡° ͜ʖ ͡°)
+    for token, tag in tagged:
+        if tag in accidentals:
+            word = token.title()
+            reply_text = reply_text.replace(word, "Accidentally " + word)
+
+    message.reply_to_message.reply_text(reply_text)
+
+# shitty maymay modules made by @divadsn ^^^
 
 # no help string
 __help__ = """
@@ -151,6 +182,7 @@ STRETCH_HANDLER = DisableAbleCommandHandler("stretch", stretch)
 VAPOR_HANDLER = DisableAbleCommandHandler("vapor", vapor, pass_args=True, admin_ok=True)
 MOCK_HANDLER = DisableAbleCommandHandler("mock", spongemocktext, admin_ok=True)
 ZALGO_HANDLER = DisableAbleCommandHandler("zalgofy", zalgotext)
+FORBES_HANDLER = DisableAbleCommandHandler("forbes", forbesify, admin_ok=True)
 
 dispatcher.add_handler(COPYPASTA_HANDLER)
 dispatcher.add_handler(CLAPMOJI_HANDLER)
@@ -160,3 +192,4 @@ dispatcher.add_handler(STRETCH_HANDLER)
 dispatcher.add_handler(VAPOR_HANDLER)
 dispatcher.add_handler(MOCK_HANDLER)
 dispatcher.add_handler(ZALGO_HANDLER)
+dispatcher.add_handler(FORBES_HANDLER)
