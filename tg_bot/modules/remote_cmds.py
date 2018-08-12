@@ -89,66 +89,66 @@ def rban(bot: Bot, update: Update, args: List[str]):
     message = update.effective_message
 
     if not args:
-        message.reply_text("You don't seem to be referring to a chat/user.")
+        message.reply_text("Try targeting something next time bud.")
         return
 
     user_id, chat_id = extract_user_and_text(message, args)
 
     if not user_id:
-        message.reply_text("You don't seem to be referring to a user.")
+        message.reply_text("Try targeting a user next time bud.")
         return
     elif not chat_id:
-        message.reply_text("You don't seem to be referring to a chat.")
+        message.reply_text("Uhhh, which chat am I supposed to ban them from bud?")
         return
 
     try:
         chat = bot.get_chat(chat_id.split()[0])
     except BadRequest as excp:
         if excp.message == "Chat not found":
-            message.reply_text("Chat not found! Make sure you entered a valid chat ID and I'm part of that chat.")
+            message.reply_text("Either you fucked up typing the chat ID, or I'm not in this group.")
             return
         else:
             raise
 
     if chat.type == 'private':
-        message.reply_text("I'm sorry, but that's a private chat!")
+        message.reply_text("Sorry fam this is a Christian group, no bans allowed.")
         return
 
     if not is_bot_admin(chat, bot.id) or not chat.get_member(bot.id).can_restrict_members:
-        message.reply_text("I can't restrict people there! Make sure I'm admin and can ban users.")
+        message.reply_text("Yea, I can't ban people here tbh.")
         return
 
     try:
         member = chat.get_member(user_id)
     except BadRequest as excp:
         if excp.message == "User not found":
-            message.reply_text("I can't seem to find this user")
+            message.reply_text("You sure they're in this group?")
             return
         else:
             raise
 
     if is_user_ban_protected(chat, user_id, member):
-        message.reply_text("I really wish I could ban admins...")
+        message.reply_text("Sir pls, this guy is an admeme. I can't ban them!")
         return
 
     if user_id == bot.id:
-        message.reply_text("I'm not gonna BAN myself, are you crazy?")
+        message.reply_text("BOI! Das me ;_;")
         return
 
     try:
         chat.kick_member(user_id)
-        message.reply_text("Banned from chat!")
+        message.reply_text("Wew lad! they banned af.")
     except BadRequest as excp:
         if excp.message == "Reply message not found":
             # Do not reply
-            message.reply_text('Banned!', quote=False)
+            message.reply_text('Rekt!', quote=False)
         elif excp.message in RBAN_ERRORS:
             message.reply_text(excp.message)
         else:
             LOGGER.warning(update)
             LOGGER.exception("ERROR banning user %s in chat %s (%s) due to %s", user_id, chat.title, chat.id,
                              excp.message)
-            message.reply_text("Well damn, I can't ban that user.")
+            message.reply_text("Well fugg, I can't ban them.")
 
 @run_async
 @bot_admin
@@ -156,66 +156,66 @@ def runban(bot: Bot, update: Update, args: List[str]):
     message = update.effective_message
 
     if not args:
-        message.reply_text("You don't seem to be referring to a chat/user.")
+        message.reply_text("Try targeting something next time bud.")
         return
 
     user_id, chat_id = extract_user_and_text(message, args)
 
     if not user_id:
-        message.reply_text("You don't seem to be referring to a user.")
+        message.reply_text("Try targeting a user next time bud.")
         return
     elif not chat_id:
-        message.reply_text("You don't seem to be referring to a chat.")
+        message.reply_text("Uhhh, which chat am I supposed to unban them from bud?")
         return
 
     try:
         chat = bot.get_chat(chat_id.split()[0])
     except BadRequest as excp:
         if excp.message == "Chat not found":
-            message.reply_text("Chat not found! Make sure you entered a valid chat ID and I'm part of that chat.")
+            message.reply_text("Either you fucked up typing the chat ID, or I'm not in this group.")
             return
         else:
             raise
 
     if chat.type == 'private':
-        message.reply_text("I'm sorry, but that's a private chat!")
+        message.reply_text("Sorry fam this is a Christian group, no unbans allowed.")
         return
 
     if not is_bot_admin(chat, bot.id) or not chat.get_member(bot.id).can_restrict_members:
-        message.reply_text("I can't unrestrict people there! Make sure I'm admin and can unban users.")
+        message.reply_text("Yea, I can't unban people here tbh.")
         return
 
     try:
         member = chat.get_member(user_id)
     except BadRequest as excp:
         if excp.message == "User not found":
-            message.reply_text("I can't seem to find this user there")
+            message.reply_text("You sure they're in this group?")
             return
         else:
             raise
             
     if is_user_in_chat(chat, user_id):
-        message.reply_text("Why are you trying to remotely unban someone that's already in that chat?")
+        message.reply_text("Uhh, they're already in the group... No need to unban them.")
         return
 
     if user_id == bot.id:
-        message.reply_text("I'm not gonna UNBAN myself, I'm an admin there!")
+        message.reply_text("BOI! Das me ;_;")
         return
 
     try:
         chat.unban_member(user_id)
-        message.reply_text("Yep, this user can join that chat!")
+        message.reply_text("Fine, I'll allow it this time...")
     except BadRequest as excp:
         if excp.message == "Reply message not found":
             # Do not reply
-            message.reply_text('Unbanned!', quote=False)
+            message.reply_text('Unrekt!', quote=False)
         elif excp.message in RUNBAN_ERRORS:
             message.reply_text(excp.message)
         else:
             LOGGER.warning(update)
             LOGGER.exception("ERROR unbanning user %s in chat %s (%s) due to %s", user_id, chat.title, chat.id,
                              excp.message)
-            message.reply_text("Well damn, I can't unban that user.")
+            message.reply_text("Well fugg, I can't unban them.")
 
 @run_async
 @bot_admin
@@ -223,66 +223,66 @@ def rkick(bot: Bot, update: Update, args: List[str]):
     message = update.effective_message
 
     if not args:
-        message.reply_text("You don't seem to be referring to a chat/user.")
+        message.reply_text("Try targeting something next time bud.")
         return
 
     user_id, chat_id = extract_user_and_text(message, args)
 
     if not user_id:
-        message.reply_text("You don't seem to be referring to a user.")
+        message.reply_text("Try targeting a user next time bud.")
         return
     elif not chat_id:
-        message.reply_text("You don't seem to be referring to a chat.")
+        message.reply_text("Uhhh, which chat am I supposed to kick them from bud?")
         return
 
     try:
         chat = bot.get_chat(chat_id.split()[0])
     except BadRequest as excp:
         if excp.message == "Chat not found":
-            message.reply_text("Chat not found! Make sure you entered a valid chat ID and I'm part of that chat.")
+            message.reply_text("Either you fucked up typing the chat ID, or I'm not in this group.")
             return
         else:
             raise
 
     if chat.type == 'private':
-        message.reply_text("I'm sorry, but that's a private chat!")
+        message.reply_text("Sorry fam this is a Christian group, no kicking allowed.")
         return
 
     if not is_bot_admin(chat, bot.id) or not chat.get_member(bot.id).can_restrict_members:
-        message.reply_text("I can't restrict people there! Make sure I'm admin and can kick users.")
+        message.reply_text("Yea, I can't kick people here tbh.")
         return
 
     try:
         member = chat.get_member(user_id)
     except BadRequest as excp:
         if excp.message == "User not found":
-            message.reply_text("I can't seem to find this user")
+            message.reply_text("You sure they're in this group?")
             return
         else:
             raise
 
     if is_user_ban_protected(chat, user_id, member):
-        message.reply_text("I really wish I could kick admins...")
+        message.reply_text("Sir pls, this guy is an admeme. I can't kick them!")
         return
 
     if user_id == bot.id:
-        message.reply_text("I'm not gonna KICK myself, are you crazy?")
+        message.reply_text("BOI! Das me ;_;")
         return
 
     try:
         chat.unban_member(user_id)
-        message.reply_text("Kicked from chat!")
+        message.reply_text("Fugg off!")
     except BadRequest as excp:
         if excp.message == "Reply message not found":
             # Do not reply
-            message.reply_text('Kicked!', quote=False)
+            message.reply_text('Kek'd!', quote=False)
         elif excp.message in RKICK_ERRORS:
             message.reply_text(excp.message)
         else:
             LOGGER.warning(update)
             LOGGER.exception("ERROR kicking user %s in chat %s (%s) due to %s", user_id, chat.title, chat.id,
                              excp.message)
-            message.reply_text("Well damn, I can't kick that user.")
+            message.reply_text("Well fugg, I can't kick them.")
 
 @run_async
 @bot_admin
@@ -290,66 +290,66 @@ def rmute(bot: Bot, update: Update, args: List[str]):
     message = update.effective_message
 
     if not args:
-        message.reply_text("You don't seem to be referring to a chat/user.")
+        message.reply_text("Try targeting something next time bud.")
         return
 
     user_id, chat_id = extract_user_and_text(message, args)
 
     if not user_id:
-        message.reply_text("You don't seem to be referring to a user.")
+        message.reply_text("Try targeting a user next time bud.")
         return
     elif not chat_id:
-        message.reply_text("You don't seem to be referring to a chat.")
+        message.reply_text("Uhhh, which chat am I supposed to mute them from bud?")
         return
 
     try:
         chat = bot.get_chat(chat_id.split()[0])
     except BadRequest as excp:
         if excp.message == "Chat not found":
-            message.reply_text("Chat not found! Make sure you entered a valid chat ID and I'm part of that chat.")
+            message.reply_text("Either you fucked up typing the chat ID, or I'm not in this group.")
             return
         else:
             raise
 
     if chat.type == 'private':
-        message.reply_text("I'm sorry, but that's a private chat!")
+        message.reply_text("Sorry fam this is a Christian group, no muting allowed.")
         return
 
     if not is_bot_admin(chat, bot.id) or not chat.get_member(bot.id).can_restrict_members:
-        message.reply_text("I can't restrict people there! Make sure I'm admin and can mute users.")
+        message.reply_text("Yea, I can't mute people here tbh.")
         return
 
     try:
         member = chat.get_member(user_id)
     except BadRequest as excp:
         if excp.message == "User not found":
-            message.reply_text("I can't seem to find this user")
+            message.reply_text("You sure they're in this group?")
             return
         else:
             raise
 
     if is_user_ban_protected(chat, user_id, member):
-        message.reply_text("I really wish I could mute admins...")
+        message.reply_text("Sir pls, this guy is an admeme. I can't mute them!")
         return
 
     if user_id == bot.id:
-        message.reply_text("I'm not gonna MUTE myself, are you crazy?")
+        message.reply_text("BOI! Das me ;_;")
         return
 
     try:
         bot.restrict_chat_member(chat.id, user_id, can_send_messages=False)
-        message.reply_text("Muted from the chat!")
+        message.reply_text("STFU Thanks!")
     except BadRequest as excp:
         if excp.message == "Reply message not found":
             # Do not reply
-            message.reply_text('Muted!', quote=False)
+            message.reply_text('Shush your face pls!', quote=False)
         elif excp.message in RMUTE_ERRORS:
             message.reply_text(excp.message)
         else:
             LOGGER.warning(update)
             LOGGER.exception("ERROR mute user %s in chat %s (%s) due to %s", user_id, chat.title, chat.id,
                              excp.message)
-            message.reply_text("Well damn, I can't mute that user.")
+            message.reply_text("Well fugg, I can't mute them.")
 
 @run_async
 @bot_admin
@@ -357,40 +357,40 @@ def runmute(bot: Bot, update: Update, args: List[str]):
     message = update.effective_message
 
     if not args:
-        message.reply_text("You don't seem to be referring to a chat/user.")
+        message.reply_text("Try targeting something next time bud.")
         return
 
     user_id, chat_id = extract_user_and_text(message, args)
 
     if not user_id:
-        message.reply_text("You don't seem to be referring to a user.")
+        message.reply_text("Try targeting a user next time bud.")
         return
     elif not chat_id:
-        message.reply_text("You don't seem to be referring to a chat.")
+        message.reply_text("Uhhh, which chat am I supposed to unmute them from bud?")
         return
 
     try:
         chat = bot.get_chat(chat_id.split()[0])
     except BadRequest as excp:
         if excp.message == "Chat not found":
-            message.reply_text("Chat not found! Make sure you entered a valid chat ID and I'm part of that chat.")
+            message.reply_text("Either you fucked up typing the chat ID, or I'm not in this group.")
             return
         else:
             raise
 
     if chat.type == 'private':
-        message.reply_text("I'm sorry, but that's a private chat!")
+        message.reply_text("Sorry fam this is a Christian group, no unmuting allowed.")
         return
 
     if not is_bot_admin(chat, bot.id) or not chat.get_member(bot.id).can_restrict_members:
-        message.reply_text("I can't unrestrict people there! Make sure I'm admin and can unban users.")
+        message.reply_text("Yea, I can't unmute people here tbh.")
         return
 
     try:
         member = chat.get_member(user_id)
     except BadRequest as excp:
         if excp.message == "User not found":
-            message.reply_text("I can't seem to find this user there")
+            message.reply_text("You sure they're in this group?")
             return
         else:
             raise
@@ -398,11 +398,11 @@ def runmute(bot: Bot, update: Update, args: List[str]):
     if is_user_in_chat(chat, user_id):
        if member.can_send_messages and member.can_send_media_messages \
           and member.can_send_other_messages and member.can_add_web_page_previews:
-        message.reply_text("This user already has the right to speak in that chat.")
+        message.reply_text("You want them to yell or something? they're not muted to begin with.")
         return
 
     if user_id == bot.id:
-        message.reply_text("I'm not gonna UNMUTE myself, I'm an admin there!")
+        message.reply_text("BOI! Das me ;_;")
         return
 
     try:
@@ -411,18 +411,18 @@ def runmute(bot: Bot, update: Update, args: List[str]):
                                      can_send_media_messages=True,
                                      can_send_other_messages=True,
                                      can_add_web_page_previews=True)
-        message.reply_text("Yep, this user can talk in that chat!")
+        message.reply_text("Yeah fine, they can talk...")
     except BadRequest as excp:
         if excp.message == "Reply message not found":
             # Do not reply
-            message.reply_text('Unmuted!', quote=False)
+            message.reply_text('I revoke my shush!', quote=False)
         elif excp.message in RUNMUTE_ERRORS:
             message.reply_text(excp.message)
         else:
             LOGGER.warning(update)
             LOGGER.exception("ERROR unmnuting user %s in chat %s (%s) due to %s", user_id, chat.title, chat.id,
                              excp.message)
-            message.reply_text("Well damn, I can't unmute that user.")
+            message.reply_text("Well fugg, I can't unmute them.")
 
 __help__ = ""
 
