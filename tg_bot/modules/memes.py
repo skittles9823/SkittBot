@@ -213,7 +213,7 @@ async def process_deepfry(image: Image, reply: Message, bot: Bot):
 # no help string
 __help__ = """
  many memz
- Thanks @deletescape for the meme commands :D
+ Thanks @deletescape and @divadsn for the meme commands :D
 """
 
 __mod_name__ = "Memes"
