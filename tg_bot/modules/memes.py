@@ -1,6 +1,9 @@
-import random, re
+import random, re, os, io, asyncio
+from PIL import Image
+from io import BytesIO
 from spongemock import spongemock
 from zalgo_text import zalgo
+from deeppyer import deepfry
 
 import nltk # shitty lib, but it does work
 nltk.download('punkt')
@@ -16,6 +19,10 @@ from tg_bot.modules.disable import DisableAbleCommandHandler
 
 WIDE_MAP = dict((i, i + 0xFEE0) for i in range(0x21, 0x7F))
 WIDE_MAP[0x20] = 0x3000
+
+# only use one event loop for the stupid face recognition
+loop = asyncio.new_event_loop()
+asyncio.set_event_loop(loop)
 
 # D A N K modules by @deletescape vvv
 
@@ -164,6 +171,43 @@ def forbesify(bot: Bot, update: Update):
 
     message.reply_to_message.reply_text(reply_text)
 
+@run_async
+def deepfryer(bot: Bot, update: Update):
+    message = update.effective_message
+    if message.reply_to_message:
+        data = message.reply_to_message.photo
+    else:
+        data = []
+
+    # check if message does contain a photo and cancel when not
+    if not data:
+        message.reply_text("What am I supposed to do with this?!")
+        return
+
+    # download last photo (highres) as byte array
+    photodata = data[len(data) - 1].get_file().download_as_bytearray()
+    image = Image.open(io.BytesIO(photodata))
+
+    # the following needs to be executed async (because dumb lib)
+    global loop
+    loop.run_until_complete(process_deepfry(image, message.reply_to_message, bot))
+
+async def process_deepfry(image: Image, reply: Message, bot: Bot):
+    # DEEPFRY IT
+    image = await deepfry(
+        img=image,
+        token=os.getenv('DEEPFRY_TOKEN', ''),
+        url_base='westeurope'
+    )
+
+    bio = BytesIO()
+    bio.name = 'image.jpeg'
+    image.save(bio, 'JPEG')
+    bio.seek(0)
+
+    # send it back
+    reply.reply_photo(bio)
+
 # shitty maymay modules made by @divadsn ^^^
 
 # no help string
@@ -183,6 +227,7 @@ VAPOR_HANDLER = DisableAbleCommandHandler("vapor", vapor, pass_args=True, admin_
 MOCK_HANDLER = DisableAbleCommandHandler("mock", spongemocktext, admin_ok=True)
 ZALGO_HANDLER = DisableAbleCommandHandler("zalgofy", zalgotext)
 FORBES_HANDLER = DisableAbleCommandHandler("forbes", forbesify, admin_ok=True)
+DEEPFRY_HANDLER = DisableAbleCommandHandler("deepfry", deepfryer, admin_ok=True)
 
 dispatcher.add_handler(COPYPASTA_HANDLER)
 dispatcher.add_handler(CLAPMOJI_HANDLER)
@@ -193,3 +238,4 @@ dispatcher.add_handler(VAPOR_HANDLER)
 dispatcher.add_handler(MOCK_HANDLER)
 dispatcher.add_handler(ZALGO_HANDLER)
 dispatcher.add_handler(FORBES_HANDLER)
+dispatcher.add_handler(DEEPFRY_HANDLER)
