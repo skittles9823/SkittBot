@@ -275,7 +275,7 @@ def rkick(bot: Bot, update: Update, args: List[str]):
     except BadRequest as excp:
         if excp.message == "Reply message not found":
             # Do not reply
-            message.reply_text('Kek'd!', quote=False)
+            message.reply_text("Kek'd!", quote=False)
         elif excp.message in RKICK_ERRORS:
             message.reply_text(excp.message)
         else:
