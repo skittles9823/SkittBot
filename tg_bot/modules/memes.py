@@ -14,7 +14,7 @@ from telegram import Message, Update, Bot, User
 from telegram import MessageEntity
 from telegram.ext import Filters, MessageHandler, run_async
 
-from tg_bot import dispatcher
+from tg_bot import dispatcher, DEEPFRY_TOKEN
 from tg_bot.modules.disable import DisableAbleCommandHandler
 
 WIDE_MAP = dict((i, i + 0xFEE0) for i in range(0x21, 0x7F))
@@ -193,7 +193,7 @@ async def process_deepfry(image: Image, reply: Message, bot: Bot):
     # DEEPFRY IT
     image = await deepfry(
         img=image,
-        token=os.getenv('DEEPFRY_TOKEN', ''),
+        token=DEEPFRY_TOKEN,
         url_base='westeurope'
     )
 
