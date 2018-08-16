@@ -85,8 +85,7 @@ def new_member(bot: Bot, update: Update):
     for mems in new_members:
         if is_user_ban_protected(chat, mems.id, chat.get_member(mems.id)):
             continue
-        val = is_safemoded(chat.id)
-        if val && val.safemode_status:
+        if is_safemoded(chat.id).safemode_status:
             try:
                 bot.restrict_chat_member(chat.id, mems.id, can_send_messages=True, can_send_media_messages=False, can_send_other_messages=False, can_add_web_page_previews=False, until_date=(int(time.time() + 24 * 60 * 60)))
             except BadRequest as excp:
