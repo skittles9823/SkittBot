@@ -1,4 +1,4 @@
-import random, re, os, io, asyncio
+import random, re, string, io, asyncio
 from PIL import Image
 from io import BytesIO
 from spongemock import spongemock
