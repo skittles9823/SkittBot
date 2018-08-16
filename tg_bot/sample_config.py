@@ -36,6 +36,9 @@ class Config(object):
     BAN_STICKER = 'CAADAgADOwADPPEcAXkko5EB3YGYAg'  # banhammer marie sticker
     ALLOW_EXCL = False  # Allow ! commands as well as /
 
+    # MEMES
+    DEEPFRY_TOKEN = None
+
 
 class Production(Config):
     LOGGER = False
