@@ -14,7 +14,7 @@ from telegram import Message, Update, Bot, User
 from telegram import MessageEntity
 from telegram.ext import Filters, MessageHandler, run_async
 
-from tg_bot import dispatcher
+from tg_bot import dispatcher, DEEPFRY_TOKEN
 from tg_bot.modules.disable import DisableAbleCommandHandler
 
 WIDE_MAP = dict((i, i + 0xFEE0) for i in range(0x21, 0x7F))
@@ -151,20 +151,23 @@ def forbesify(bot: Bot, update: Update):
     else:
         data = ''
 
+    data = data.lower()
     accidentals = ['VB', 'VBD', 'VBG', 'VBN']
-    reply_text = data.title()
+    reply_text = data.split()
+    offset = 0
 
     # use NLTK to find out where verbs are
-    tokens = nltk.word_tokenize(data)
-    tagged = nltk.pos_tag(tokens)
+    tagged = dict(nltk.pos_tag(reply_text))
 
-    # let's go through every token and check if it's a verb
-    # if yes, then let's forbesify ( ͡° ͜ʖ ͡°)
-    for token, tag in tagged:
-        if tag in accidentals:
-            word = token.title()
-            reply_text = reply_text.replace(word, "Accidentally " + word)
-
+    # let's go through every word and check if it's a verb
+    # if yes, insert ACCIDENTALLY and increase offset
+    for k in range(len(reply_text)):
+        i = reply_text[k + offset]
+        if tagged.get(i) in accidentals:
+            reply_text.insert(k + offset, 'accidentally')
+            offset += 1
+    
+    reply_text = string.capwords(' '.join(reply_text))
     message.reply_to_message.reply_text(reply_text)
 
 @run_async
@@ -193,7 +196,7 @@ async def process_deepfry(image: Image, reply: Message, bot: Bot):
     # DEEPFRY IT
     image = await deepfry(
         img=image,
-        token=os.getenv('DEEPFRY_TOKEN', ''),
+        token=DEEPFRY_TOKEN,
         url_base='westeurope'
     )
 
