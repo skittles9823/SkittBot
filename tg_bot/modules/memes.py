@@ -183,7 +183,7 @@ if DEEPFRY_TOKEN != None:
         # check if message does contain a photo and cancel when not
         if not data:
              message.reply_text("What am I supposed to do with this?!")
-            return
+             return
 
         # download last photo (highres) as byte array
         photodata = data[len(data) - 1].get_file().download_as_bytearray()
