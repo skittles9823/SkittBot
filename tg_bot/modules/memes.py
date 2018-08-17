@@ -1,4 +1,5 @@
-import random, re, os, io, asyncio
+import sys
+import random, re, string, io, asyncio
 from PIL import Image
 from io import BytesIO
 from spongemock import spongemock
@@ -82,7 +83,7 @@ def owo(bot: Bot, update: Update):
     reply_text += ' ' + random.choice(faces)
     message.reply_to_message.reply_text(reply_text)
 
-    
+
 @run_async
 def stretch(bot: Bot, update: Update):
     message = update.effective_message
@@ -90,7 +91,7 @@ def stretch(bot: Bot, update: Update):
     reply_text = re.sub(r'([aeiouAEIOUａｅｉｏｕＡＥＩＯＵ])', (r'\1' * count), message.reply_to_message.text)
     message.reply_to_message.reply_text(reply_text)
 
-   
+
 @run_async
 def vapor(bot: Bot, update: Update, args: List[str]):
     message = update.effective_message
@@ -118,19 +119,19 @@ def vapor(bot: Bot, update: Update, args: List[str]):
 
 @run_async
 def spongemocktext(bot: Bot, update: Update):
-    message = update.effective_message    
+    message = update.effective_message
     if message.reply_to_message:
         data = message.reply_to_message.text
     else:
         data = ''
-       
+
     reply_text = spongemock.mock(data)
     message.reply_to_message.reply_text(reply_text)
 
 
 @run_async
 def zalgotext(bot: Bot, update: Update):
-    message = update.effective_message    
+    message = update.effective_message
     if message.reply_to_message:
         data = message.reply_to_message.text
     else:
@@ -166,47 +167,53 @@ def forbesify(bot: Bot, update: Update):
         if tagged.get(i) in accidentals:
             reply_text.insert(k + offset, 'accidentally')
             offset += 1
-    
+
     reply_text = string.capwords(' '.join(reply_text))
     message.reply_to_message.reply_text(reply_text)
 
-@run_async
-def deepfryer(bot: Bot, update: Update):
-    message = update.effective_message
-    if message.reply_to_message:
-        data = message.reply_to_message.photo
-    else:
-        data = []
+if DEEPFRY_TOKEN != None:
+    @run_async
+    def deepfryer(bot: Bot, update: Update):
+        message = update.effective_message
+        if message.reply_to_message:
+            data = message.reply_to_message.photo
+        else:
+            data = []
 
-    # check if message does contain a photo and cancel when not
-    if not data:
-        message.reply_text("What am I supposed to do with this?!")
-        return
+        # check if message does contain a photo and cancel when not
+        if not data:
+             message.reply_text("What am I supposed to do with this?!")
+             return
 
-    # download last photo (highres) as byte array
-    photodata = data[len(data) - 1].get_file().download_as_bytearray()
-    image = Image.open(io.BytesIO(photodata))
+        # download last photo (highres) as byte array
+        photodata = data[len(data) - 1].get_file().download_as_bytearray()
+        image = Image.open(io.BytesIO(photodata))
 
-    # the following needs to be executed async (because dumb lib)
-    loop = asyncio.new_event_loop()
-    loop.run_until_complete(process_deepfry(image, message.reply_to_message, bot))
-    loop.close()
+        # the following needs to be executed async (because dumb lib)
+        loop = asyncio.new_event_loop()
+        loop.run_until_complete(process_deepfry(image, message.reply_to_message, bot))
+        loop.close()
 
-async def process_deepfry(image: Image, reply: Message, bot: Bot):
-    # DEEPFRY IT
-    image = await deepfry(
-        img=image,
-        token=DEEPFRY_TOKEN,
-        url_base='westeurope'
-    )
+    async def process_deepfry(image: Image, reply: Message, bot: Bot):
+        # DEEPFRY IT
+        image = await deepfry(
+            img=image,
+            token=DEEPFRY_TOKEN,
+            url_base='westeurope'
+        )
 
-    bio = BytesIO()
-    bio.name = 'image.jpeg'
-    image.save(bio, 'JPEG')
+        bio = BytesIO()
+        bio.name = 'image.jpeg'
+        image.save(bio, 'JPEG')
 
-    # send it back
-    bio.seek(0)
-    reply.reply_photo(bio)
+        # send it back
+        bio.seek(0)
+        reply.reply_photo(bio)
+
+    DEEPFRY_HANDLER = DisableAbleCommandHandler("deepfry", deepfryer, admin_ok=True)
+    dispatcher.add_handler(DEEPFRY_HANDLER)
+else:
+    print("RIP, no DEEPFRY_TOKEN ;_;", file=sys.stderr)
 
 # shitty maymay modules made by @divadsn ^^^
 
@@ -227,7 +234,6 @@ VAPOR_HANDLER = DisableAbleCommandHandler("vapor", vapor, pass_args=True, admin_
 MOCK_HANDLER = DisableAbleCommandHandler("mock", spongemocktext, admin_ok=True)
 ZALGO_HANDLER = DisableAbleCommandHandler("zalgofy", zalgotext)
 FORBES_HANDLER = DisableAbleCommandHandler("forbes", forbesify, admin_ok=True)
-DEEPFRY_HANDLER = DisableAbleCommandHandler("deepfry", deepfryer, admin_ok=True)
 
 dispatcher.add_handler(COPYPASTA_HANDLER)
 dispatcher.add_handler(CLAPMOJI_HANDLER)
@@ -238,4 +244,3 @@ dispatcher.add_handler(VAPOR_HANDLER)
 dispatcher.add_handler(MOCK_HANDLER)
 dispatcher.add_handler(ZALGO_HANDLER)
 dispatcher.add_handler(FORBES_HANDLER)
-dispatcher.add_handler(DEEPFRY_HANDLER)
