@@ -76,7 +76,7 @@ def ban(bot: Bot, update: Update, args: List[str]) -> str:
         return ""
 
     if user_id == bot.id:
-        message.reply_text("You can't ban AmgerySkittBot m8")
+        message.reply_text("You can't ban the ＴＨＯＮＫ！")
         return ""
 
     log = "<b>{}:</b>" \
@@ -138,7 +138,7 @@ def temp_ban(bot: Bot, update: Update, args: List[str]) -> str:
         return ""
 
     if user_id == bot.id:
-        message.reply_text("You can't ban AmgerySkittBot m8")
+        message.reply_text("You can't ban the ＴＨＯＮＫ！")
         return ""
 
     if not reason:
