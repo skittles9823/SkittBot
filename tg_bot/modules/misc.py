@@ -42,7 +42,7 @@ RUN_STRINGS = (
     "( ͡° ͜ʖ ͡°)( ͡° ͜ʖ ͡°)",
     "This one is just to annoy @anirudhgupta109 ;)",
     "Please. End your existence thanks.",
-    "AmgrySkittBot says no!",
+    "ＴＨＯＮＫＹ　ＢＯＩ says no!",
     "NoU∞.",
     "Well… "
     "That just happened.",
@@ -70,8 +70,8 @@ RUN_STRINGS = (
     "Not if I ban you first.",
     "Birthn't yourself.",
     "Okay have fun with your exercise sar.",
-    "I am AmgrySkittBot! There is no running from me!",
-    "AmgrySkittBot demands you walk and not run!",
+    "I am the　ＴＨＯＮＫ！ There is no running from me!",
+    "ＴＨＯＮＫＢｏｔ demands you walk and not run!",
 )
 
 SLAP_TEMPLATES = (
