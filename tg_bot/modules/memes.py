@@ -4,6 +4,8 @@ from io import BytesIO
 from spongemock import spongemock
 from zalgo_text import zalgo
 from deeppyer import deepfry
+import os
+from pathlib import Path
 
 import nltk # shitty lib, but it does work
 nltk.download('punkt')
@@ -176,18 +178,25 @@ def deepfryer(bot: Bot, update: Update):
     message = update.effective_message
     if message.reply_to_message:
         data = message.reply_to_message.photo
+        data2 = message.reply_to_message.sticker
     else:
         data = []
+        data2 = []
 
     # check if message does contain a photo and cancel when not
-    if not data:
+    if not data and not data2:
         message.reply_text("What am I supposed to do with this?!")
         return
 
     # download last photo (highres) as byte array
-    photodata = data[len(data) - 1].get_file().download_as_bytearray()
-    image = Image.open(io.BytesIO(photodata))
-
+    if data:
+        photodata = data[len(data) - 1].get_file().download_as_bytearray()
+        image = Image.open(io.BytesIO(photodata))
+    elif data2:
+        sticker = bot.get_file(data2.file_id)
+        sticker.download('sticker.png')
+        image = Image.open("sticker.png")
+ 
     # the following needs to be executed async (because dumb lib)
     loop = asyncio.new_event_loop()
     loop.run_until_complete(process_deepfry(image, message.reply_to_message, bot))
@@ -208,7 +217,8 @@ async def process_deepfry(image: Image, reply: Message, bot: Bot):
     # send it back
     bio.seek(0)
     reply.reply_photo(bio)
-
+    if Path("sticker.png").is_file():
+        os.remove("sticker.png")
 
 # shitty maymay modules made by @divadsn ^^^
 
