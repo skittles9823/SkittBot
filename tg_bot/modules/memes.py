@@ -181,6 +181,7 @@ deepdata2 = []
 deepdata3 = []
 imgno = 0
 chat_id = []
+fps = 0.0
 
 @run_async
 def deepfryer(bot: Bot, update: Update):
@@ -211,6 +212,7 @@ def deepfryer(bot: Bot, update: Update):
         sticker.download('sticker.png')
         image = Image.open("sticker.png")
     elif deepdata3:
+        global fps
         global imgno
         global chat_id
         chat_id = update.effective_chat.id
@@ -261,7 +263,8 @@ async def process_deepfry(image: Image, reply: Message, bot: Bot):
                     url_base='westeurope',
                     )
             image.save('./image{}.jpg'.format(i), 'jpeg')
-        os.system('convert -delay 4 -loop 0 *.jpg final.gif')
+        delay = 100/fps
+        os.system('convert -delay {} -loop 0 *.jpg final.gif'.format(delay))
         meh = 'final.gif'
 
     # send it back
