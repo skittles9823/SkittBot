@@ -189,13 +189,13 @@ def deepfryer(bot: Bot, update: Update):
     global deepdata3
     message = update.effective_message
     if message.reply_to_message:
-       deepdata = message.reply_to_message.photo
-       deepdata2 = message.reply_to_message.sticker
-       deepdata3 = message.reply_to_message.animation
+        deepdata = message.reply_to_message.photo
+        deepdata2 = message.reply_to_message.sticker
+        deepdata3 = message.reply_to_message.animation
     else:
-       deepdata = []
-       deepdata2 = []
-       deepdata3 = []
+        deepdata = []
+        deepdata2 = []
+        deepdata3 = []
 
     # check if message does contain a photo and cancel when not
     if not deepdata and not deepdata2 and not deepdata3:
