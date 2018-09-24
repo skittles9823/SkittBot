@@ -219,7 +219,8 @@ def deepfryer(bot: Bot, update: Update):
         message.reply_text("detected gif")
         gif = bot.get_file(deepdata3.file_id)
         gif.download('gif.mp4')
-        os.makedirs('gifdata')
+        if not Path('gifdata').is_dir():
+            os.makedirs('gifdata')
         jsondata = ast.literal_eval(os.popen('ffprobe -i gif.mp4 -v quiet -print_format json -show_format -show_streams -hide_banner').read())
         stringfps = jsondata["streams"][0]["avg_frame_rate"]
         templist= []
