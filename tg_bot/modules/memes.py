@@ -266,14 +266,16 @@ async def process_deepfry(image: Image, reply: Message, bot: Bot):
             image.save('./image{}.jpg'.format(i), 'jpeg')
         delay = 100/fps
         os.system('convert -delay {} -loop 0 *.jpg final.gif'.format(delay))
-        meh = 'final.gif'
+        os.system('ffmpeg -i final.gif -c:v libvpx -crf 6 -b:v 500K -pix_fmt yuv420p compfin.webm')
+        os.system('ffmpeg -i compfin.webm compfin.mp4')
+        meh = 'compfin.mp4'
 
     # send it back
     if deepdata or deepdata2:
         bio.seek(0)
         reply.reply_photo(bio)
     elif deepdata3:
-        bot.send_animation(chat_id=chat_id, animation=open('final.gif', 'rb'))
+        bot.send_video(chat_id=chat_id, video=open(meh, 'rb'))
      
     if Path("image1.jpg").is_file():
         for i in range(1, imgno+1):
@@ -286,6 +288,8 @@ async def process_deepfry(image: Image, reply: Message, bot: Bot):
         os.remove("gif.mp4")
     if Path('final.gif').is_file():
         os.remove('final.gif')
+        os.remove(meh)
+        os.remove('compfin.webm')
 
 # shitty maymay modules made by @divadsn ^^^
 
