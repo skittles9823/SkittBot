@@ -251,28 +251,16 @@ async def process_deepfry(image: Image, reply: Message, bot: Bot):
         for i in range(1, imgno+1):
             if i < 10:
                 imagew = Image.open('gifdata/out0000{}.jpg'.format(i))
-                image = await deepfry(
-                             img=imagew,
-                             token=None,
-                             url_base='westeurope',
-                        )
-                image.save('./image{}.jpg'.format(i), 'jpeg')
             elif i >= 10 and i < 100:
                 imagew = Image.open('gifdata/out000{}.jpg'.format(i))
-                image = await deepfry(
-                             img=imagew,
-                             token=None,
-                             url_base='westeurope',
-                        )
-                image.save('./image{}.jpg'.format(i), 'jpeg')
             elif i >= 100:
                 imagew = Image.open('gifdata/out00{}.jpg'.format(i))
-                image = await deepfry(
-                             img=imagew,
-                             token=None,
-                             url_base='westeurope',
-                        )
-                image.save('./image{}.jpg'.format(i), 'jpeg')
+            image = await deepfry(
+                    img=imagew,
+                    token=None,
+                    url_base='westeurope',
+                    )
+            image.save('./image{}.jpg'.format(i), 'jpeg')
         os.system('convert -delay 4 -loop 0 *.jpg final.gif')
         meh = 'final.gif'
 
@@ -326,3 +314,4 @@ dispatcher.add_handler(MOCK_HANDLER)
 dispatcher.add_handler(ZALGO_HANDLER)
 dispatcher.add_handler(FORBES_HANDLER)
 dispatcher.add_handler(DEEPFRY_HANDLER)
+
