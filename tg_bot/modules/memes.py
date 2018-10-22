@@ -6,16 +6,13 @@ from zalgo_text import zalgo
 from deeppyer import deepfry
 import os
 from pathlib import Path
-import shutil
-import ast
-import numpy
 
 import nltk # shitty lib, but it does work
 nltk.download('punkt')
 nltk.download('averaged_perceptron_tagger')
 
 from typing import Optional, List
-from telegram import Message, Update, Bot, User, Chat
+from telegram import Message, Update, Bot, User
 from telegram import MessageEntity
 from telegram.ext import Filters, MessageHandler, run_async
 
@@ -176,62 +173,30 @@ def forbesify(bot: Bot, update: Update):
     message.reply_to_message.reply_text(reply_text)
 
 
-deepdata = []
-deepdata2 = []
-deepdata3 = []
-imgno = 0
-chat_id = []
-fps = 0.0
-
 @run_async
 def deepfryer(bot: Bot, update: Update):
-    global deepdata
-    global deepdata2
-    global deepdata3
     message = update.effective_message
     if message.reply_to_message:
-        deepdata = message.reply_to_message.photo
-        deepdata2 = message.reply_to_message.sticker
-        deepdata3 = message.reply_to_message.animation
+        data = message.reply_to_message.photo
+        data2 = message.reply_to_message.sticker
     else:
-        deepdata = []
-        deepdata2 = []
-        deepdata3 = []
+        data = []
+        data2 = []
 
     # check if message does contain a photo and cancel when not
-    if not deepdata and not deepdata2 and not deepdata3:
+    if not data and not data2:
         message.reply_text("What am I supposed to do with this?!")
         return
 
     # download last photo (highres) as byte array
-    if deepdata:
-        photodata = deepdata[len(deepdata) - 1].get_file().download_as_bytearray()
+    if data:
+        photodata = data[len(data) - 1].get_file().download_as_bytearray()
         image = Image.open(io.BytesIO(photodata))
-    elif deepdata2:
-        sticker = bot.get_file(deepdata2.file_id)
+    elif data2:
+        sticker = bot.get_file(data2.file_id)
         sticker.download('sticker.png')
         image = Image.open("sticker.png")
-    elif deepdata3:
-        global fps
-        global imgno
-        global chat_id
-        chat_id = update.effective_chat.id
-        message.reply_text("detected gif")
-        gif = bot.get_file(deepdata3.file_id)
-        gif.download('gif.mp4')
-        if not Path('gifdata').is_dir():
-            os.makedirs('gifdata')
-        jsondata = ast.literal_eval(os.popen('ffprobe -i gif.mp4 -v quiet -print_format json -show_format -show_streams -hide_banner').read())
-        stringfps = jsondata["streams"][0]["avg_frame_rate"]
-        templist= []
-        for i in stringfps.split('/'):
-            templist.append(float(i))
-        fps = numpy.divide(templist[0], templist[1])
-        os.system('ffmpeg -i gif.mp4 -r {} gifdata/out%05d.jpg'.format(fps)) 
-        duration = float(jsondata["streams"][0]["duration"])
-        imgno = int(duration*fps)
-        image = 0
-
+ 
     # the following needs to be executed async (because dumb lib)
     loop = asyncio.new_event_loop()
     loop.run_until_complete(process_deepfry(image, message.reply_to_message, bot))
@@ -239,57 +204,21 @@ def deepfryer(bot: Bot, update: Update):
 
 async def process_deepfry(image: Image, reply: Message, bot: Bot):
     # DEEPFRY IT
-    if deepdata or deepdata2:
-        image = await deepfry(
-            img=image,
-            token=DEEPFRY_TOKEN,
-            url_base='westeurope'
-        )
+    image = await deepfry(
+        img=image,
+        token=DEEPFRY_TOKEN,
+        url_base='westeurope'
+    )
 
-        bio = BytesIO()
-        bio.name = 'image.jpeg'
-        image.save(bio, 'JPEG')
-    
-    elif deepdata3:
-        for i in range(1, imgno+1):
-            if i < 10:
-                imagew = Image.open('gifdata/out0000{}.jpg'.format(i))
-            elif i >= 10 and i < 100:
-                imagew = Image.open('gifdata/out000{}.jpg'.format(i))
-            elif i >= 100:
-                imagew = Image.open('gifdata/out00{}.jpg'.format(i))
-            image = await deepfry(
-                    img=imagew,
-                    token=None,
-                    url_base='westeurope',
-                    )
-            image.save('./image{}.jpg'.format(i), 'jpeg')
-        delay = 100/fps
-        os.system('convert -delay {} -loop 0 *.jpg final.gif'.format(delay))
-        os.system('ffmpeg -i final.gif -c:v libvpx -crf 6 -b:v 500K -pix_fmt yuv420p compfin.webm')
-        os.system('ffmpeg -i compfin.webm compfin.mp4')
-        meh = 'compfin.mp4'
+    bio = BytesIO()
+    bio.name = 'image.jpeg'
+    image.save(bio, 'JPEG')
 
     # send it back
-    if deepdata or deepdata2:
-        bio.seek(0)
-        reply.reply_photo(bio)
-    elif deepdata3:
-        bot.send_video(chat_id=chat_id, video=open(meh, 'rb'))
-     
-    if Path("image1.jpg").is_file():
-        for i in range(1, imgno+1):
-            os.remove('image{}.jpg'.format(i))
+    bio.seek(0)
+    reply.reply_photo(bio)
     if Path("sticker.png").is_file():
         os.remove("sticker.png")
-    if Path('gifdata').is_dir():
-        shutil.rmtree('gifdata')
-    if Path('gif.mp4').is_file():
-        os.remove("gif.mp4")
-    if Path('final.gif').is_file():
-        os.remove('final.gif')
-        os.remove(meh)
-        os.remove('compfin.webm')
 
 # shitty maymay modules made by @divadsn ^^^
 
@@ -322,4 +251,3 @@ dispatcher.add_handler(MOCK_HANDLER)
 dispatcher.add_handler(ZALGO_HANDLER)
 dispatcher.add_handler(FORBES_HANDLER)
 dispatcher.add_handler(DEEPFRY_HANDLER)
-
