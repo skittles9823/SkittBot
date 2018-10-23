@@ -1,4 +1,3 @@
-telegram
 future
 emoji
 requests
