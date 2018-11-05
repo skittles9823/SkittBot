@@ -234,7 +234,7 @@ def info(bot: Bot, update: Update, args: List[str]):
     elif not msg.reply_to_message and (not args or (
             len(args) >= 1 and not args[0].startswith("@") and not args[0].isdigit() and not msg.parse_entities(
         [MessageEntity.TEXT_MENTION]))):
-        msg.reply_text("I can't extract a user from this.")
+        msg.reply_text("Yeah nah, this mans doesn't exist.")
         return
 
     else:
@@ -253,7 +253,7 @@ def info(bot: Bot, update: Update, args: List[str]):
     text += "\nPermanent user link: {}".format(mention_html(user.id, "link"))
 
     if user.id == OWNER_ID:
-        text += "\n\nI wont hurt Skittles ;_;"
+        text += "\n\nDis nibba stronk af!"
     else:
         if user.id in SUDO_USERS:
             text += "\nThis person is one of my sudo users! " \
@@ -264,8 +264,8 @@ def info(bot: Bot, update: Update, args: List[str]):
                         "Not quite a sudo user, but can still gban you off the map."
 
             if user.id in WHITELIST_USERS:
-                text += "\nThis person has been whitelisted! " \
-                        "That means I'm not allowed to ban/kick them."
+                text += "\nThis person is Anirudh! " \
+                        "I feel bad for them, so I'm not going to ban/kick them."
 
     for mod in USER_INFO:
         mod_info = mod.__user_info__(user.id).strip()
@@ -366,7 +366,7 @@ def gdpr(bot: Bot, update: Update):
         mod.__gdpr__(update.effective_user.id)
 
     update.effective_message.reply_text("Your personal data has been deleted.\n\nNote that this will not unban "
-                                        "you from any chats, as that is telegram data, not Marie data. "
+                                        "you from any chats, as that is telegram data, not SkittBot data. "
                                         "Flooding, warns, and gbans are also preserved, as of "
                                         "[this](https://ico.org.uk/for-organisations/guide-to-the-general-data-protection-regulation-gdpr/individual-rights/right-to-erasure/), "
                                         "which clearly states that the right to erasure does not apply "
@@ -416,8 +416,6 @@ def stats(bot: Bot, update: Update):
 
 def gps(bot: Bot, update: Update, args: List[str]):
     message = update.effective_message
-    if len(args) == 0:
-        update.effective_message.reply_text("That was a funny joke, but no really, put in a location")
     try:
         geolocator = Nominatim(user_agent="SkittBot")
         location = " ".join(args)
@@ -428,9 +426,9 @@ def gps(bot: Bot, update: Update, args: List[str]):
         the_loc = Location(lon, lat) 
         gm = "https://www.google.com/maps/search/{},{}".format(lat,lon)
         bot.send_location(chat_id, location=the_loc)
-        update.message.reply_text("Open with: [Google Maps]({})".format(gm), parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
+        message.reply_text("Open with: [Google Maps]({})".format(gm), parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
     except AttributeError:
-        update.message.reply_text("I can't find that")
+        message.reply_text("I can't find that")
 
 
 # /ip is for private use
@@ -441,6 +439,8 @@ __help__ = """
  - /time <place>: gives the local time at the given place.
  - /info: get information about a user.
  - /gdpr: deletes your information from the bot's database. Private chats only.
+ - /safemode <on/off/yes/no>: Disallows new users to send media for 24 hours after joining a group.
+    Use unmute to unrestrict them.
 
  - /markdownhelp: quick summary of how markdown works in telegram - can only be called in private chats.
 """

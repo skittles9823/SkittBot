@@ -50,7 +50,7 @@ def warn(user: User, chat: Chat, reason: str, message: Message, warner: User = N
         for warn_reason in reasons:
             reply += "\n - {}".format(html.escape(warn_reason))
 
-        message.bot.send_sticker(chat.id, BAN_STICKER)  # banhammer marie sticker
+        message.bot.send_sticker(chat.id, BAN_STICKER)  # Really makes you think sticker
         keyboard = []
         log_reason = "<b>{}:</b>" \
                      "\n#WARN_BAN" \
