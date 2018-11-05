@@ -69,6 +69,7 @@ def getlink(bot: Bot, update: Update, args: List[int]):
 
     message.reply_text(links)
 
+
 @run_async
 def slist(bot: Bot, update: Update):
     text1 = "My sudo users are:"
@@ -89,6 +90,7 @@ def slist(bot: Bot, update: Update):
     update.effective_message.reply_text(text1 + "\n", parse_mode=ParseMode.MARKDOWN)
     update.effective_message.reply_text(text2 + "\n", parse_mode=ParseMode.MARKDOWN)
 
+
 @run_async
 @user_admin
 def birthday(bot: Bot, update: Update, args: List[str]):
@@ -98,7 +100,8 @@ def birthday(bot: Bot, update: Update, args: List[str]):
         bdaymessage = random.choice(MESSAGES)
         update.effective_message.reply_text(bdaymessage + username)
 
-    __help__ = """
+
+__help__ = """
 *Owner only:*
 - /getlink *chatid*: Get the invite link for a specific chat.
 
