@@ -72,23 +72,31 @@ def getlink(bot: Bot, update: Update, args: List[int]):
 
 @run_async
 def slist(bot: Bot, update: Update):
+    message = update.effective_message
     text1 = "My sudo users are:"
-    for user_id in SUDO_USERS:
-        user = bot.get_chat(user_id)
-        name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
-        if user.username:
-            name = escape_markdown("@" + user.username)
-        text1 += "\n - {}".format(name)
     text2 = "My support users are:"
+    for user_id in SUDO_USERS:
+        try:
+            user = bot.get_chat(user_id)
+            name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
+            if user.username:
+                name = escape_markdown("@" + user.username)
+            text1 += "\n - {}".format(name)
+        except BadRequest as excp:
+            if excp.message == 'Chat not found':
+                text1 += "\n - ({}) - not found".format(user_id)
     for user_id in SUPPORT_USERS:
-        user = bot.get_chat(user_id)
-        name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
-        if user.username:
-            name = escape_markdown("@" + user.username)
-        text2 += "\n - {}".format(name)
-
-    update.effective_message.reply_text(text1 + "\n", parse_mode=ParseMode.MARKDOWN)
-    update.effective_message.reply_text(text2 + "\n", parse_mode=ParseMode.MARKDOWN)
+        try:
+            user = bot.get_chat(user_id)
+            name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
+            if user.username:
+                name = escape_markdown("@" + user.username)
+            text2 += "\n - {}".format(name)
+        except BadRequest as excp:
+            if excp.message == 'Chat not found':
+                text2 += "\n - ({}) - not found".format(user_id)
+    message.reply_text(text1 + "\n", parse_mode=ParseMode.MARKDOWN)
+    message.reply_text(text2 + "\n", parse_mode=ParseMode.MARKDOWN)
 
 
 @run_async
