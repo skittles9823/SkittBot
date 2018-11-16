@@ -138,10 +138,10 @@ def spongemocktext(bot: Bot, update: Update):
     if message.reply_to_message:
         data = message.reply_to_message.text
     else:
-        data = message.reply_text("Haha yes, I know how to mock text.")
+        data = str('Haha yes, I know how to mock text.')
 
     reply_text = spongemock.mock(data)
-    message.reply_to_message.reply_text(reply_text)
+    message.reply_text(reply_text)
 
 
 @run_async
@@ -150,10 +150,10 @@ def zalgotext(bot: Bot, update: Update):
     if message.reply_to_message:
         data = message.reply_to_message.text
     else:
-        data = message.reply_text("Insolant human, you must reply to something to zalgofy it!")
+        data = str('Insolant human, you must reply to something to zalgofy it!')
 
     reply_text = zalgo.zalgo().zalgofy(data)
-    message.reply_to_message.reply_text(reply_text)
+    message.reply_text(reply_text)
 
 # Less D A N K modules by @skittles9823 # holi fugg I did some maymays ^^^
 # shitty maymay modules made by @divadsn vvv
