@@ -28,75 +28,89 @@ WIDE_MAP[0x20] = 0x3000
 @run_async
 def copypasta(bot: Bot, update: Update):
     message = update.effective_message
-    emojis = ["😂", "😂", "👌", "✌", "💞", "👍", "👌", "💯", "🎶", "👀", "😂", "👓", "👏", "👐", "🍕", "💥", "🍴", "💦", "💦", "🍑", "🍆", "😩", "😏", "👉👌", "👀", "👅", "😩", "🚰"]
-    reply_text = random.choice(emojis)
-    b_char = random.choice(message.reply_to_message.text).lower() # choose a random character in the message to be substituted with 🅱️
-    for c in message.reply_to_message.text:
-        if c == " ":
-            reply_text += random.choice(emojis)
-        elif c in emojis:
-            reply_text += c
-            reply_text += random.choice(emojis)
-        elif c.lower() == b_char:
-            reply_text += "🅱️"
-        else:
-            if bool(random.getrandbits(1)):
-                reply_text += c.upper()
+    if not message.reply_to_message:
+        message.reply_text("I need a message to meme.")
+    else:
+        emojis = ["😂", "😂", "👌", "✌", "💞", "👍", "👌", "💯", "🎶", "👀", "😂", "👓", "👏", "👐", "🍕", "💥", "🍴", "💦", "💦", "🍑", "🍆", "😩", "😏", "👉👌", "👀", "👅", "😩", "🚰"]
+        reply_text = random.choice(emojis)
+        b_char = random.choice(message.reply_to_message.text).lower() # choose a random character in the message to be substituted with 🅱️
+        for c in message.reply_to_message.text:
+            if c == " ":
+                reply_text += random.choice(emojis)
+            elif c in emojis:
+                reply_text += c
+                reply_text += random.choice(emojis)
+            elif c.lower() == b_char:
+                reply_text += "🅱️"
             else:
-                reply_text += c.lower()
-    reply_text += random.choice(emojis)
-    message.reply_to_message.reply_text(reply_text)
+                if bool(random.getrandbits(1)):
+                    reply_text += c.upper()
+                else:
+                    reply_text += c.lower()
+        reply_text += random.choice(emojis)
+        message.reply_to_message.reply_text(reply_text)
 
 
 @run_async
 def bmoji(bot: Bot, update: Update):
     message = update.effective_message
-    b_char = random.choice(message.reply_to_message.text).lower() # choose a random character in the message to be substituted with 🅱️
-    reply_text = message.reply_to_message.text.replace(b_char, "🅱️").replace(b_char.upper(), "🅱️")
-    message.reply_to_message.reply_text(reply_text)
+    if not message.reply_to_message:
+        message.reply_text("I need a message to meme.")
+    else:
+        b_char = random.choice(message.reply_to_message.text).lower() # choose a random character in the message to be substituted with 🅱️
+        reply_text = message.reply_to_message.text.replace(b_char, "🅱️").replace(b_char.upper(), "🅱️")
+        message.reply_to_message.reply_text(reply_text)
 
 
 @run_async
 def clapmoji(bot: Bot, update: Update):
     message = update.effective_message
-    reply_text = "👏 "
-    reply_text += message.reply_to_message.text.replace(" ", " 👏 ")
-    reply_text += " 👏"
-    message.reply_to_message.reply_text(reply_text)
+    if not message.reply_to_message:
+        message.reply_text("I need a message to meme.")
+    else:
+        reply_text = "👏 "
+        reply_text += message.reply_to_message.text.replace(" ", " 👏 ")
+        reply_text += " 👏"
+        message.reply_to_message.reply_text(reply_text)
 
 
 @run_async
 def owo(bot: Bot, update: Update):
     message = update.effective_message
-    faces = ['(・`ω´・)',';;w;;','owo','UwU','>w<','^w^','\(^o\) (/o^)/','( ^ _ ^)∠☆','(ô_ô)','~:o',';____;', '(*^*)', '(>_', '(♥_♥)', '*(^O^)*', '((+_+))']
-    reply_text = re.sub(r'[rl]', "w", message.reply_to_message.text)
-    reply_text = re.sub(r'[ｒｌ]', "ｗ", message.reply_to_message.text)
-    reply_text = re.sub(r'[RL]', 'W', reply_text)
-    reply_text = re.sub(r'[ＲＬ]', 'Ｗ', reply_text)
-    reply_text = re.sub(r'n([aeiouａｅｉｏｕ])', r'ny\1', reply_text)
-    reply_text = re.sub(r'ｎ([ａｅｉｏｕ])', r'ｎｙ\1', reply_text)
-    reply_text = re.sub(r'N([aeiouAEIOU])', r'Ny\1', reply_text)
-    reply_text = re.sub(r'Ｎ([ａｅｉｏｕＡＥＩＯＵ])', r'Ｎｙ\1', reply_text)
-    reply_text = re.sub(r'\!+', ' ' + random.choice(faces), reply_text)
-    reply_text = re.sub(r'！+', ' ' + random.choice(faces), reply_text)
-    reply_text = reply_text.replace("ove", "uv")
-    reply_text = reply_text.replace("ｏｖｅ", "ｕｖ")
-    reply_text += ' ' + random.choice(faces)
-    message.reply_to_message.reply_text(reply_text)
+    if not message.reply_to_message:
+        message.reply_text("I need a message to meme.")
+    else:
+        faces = ['(・`ω´・)',';;w;;','owo','UwU','>w<','^w^','\(^o\) (/o^)/','( ^ _ ^)∠☆','(ô_ô)','~:o',';____;', '(*^*)', '(>_', '(♥_♥)', '*(^O^)*', '((+_+))']
+        reply_text = re.sub(r'[rl]', "w", message.reply_to_message.text)
+        reply_text = re.sub(r'[ｒｌ]', "ｗ", message.reply_to_message.text)
+        reply_text = re.sub(r'[RL]', 'W', reply_text)
+        reply_text = re.sub(r'[ＲＬ]', 'Ｗ', reply_text)
+        reply_text = re.sub(r'n([aeiouａｅｉｏｕ])', r'ny\1', reply_text)
+        reply_text = re.sub(r'ｎ([ａｅｉｏｕ])', r'ｎｙ\1', reply_text)
+        reply_text = re.sub(r'N([aeiouAEIOU])', r'Ny\1', reply_text)
+        reply_text = re.sub(r'Ｎ([ａｅｉｏｕＡＥＩＯＵ])', r'Ｎｙ\1', reply_text)
+        reply_text = re.sub(r'\!+', ' ' + random.choice(faces), reply_text)
+        reply_text = re.sub(r'！+', ' ' + random.choice(faces), reply_text)
+        reply_text = reply_text.replace("ove", "uv")
+        reply_text = reply_text.replace("ｏｖｅ", "ｕｖ")
+        reply_text += ' ' + random.choice(faces)
+        message.reply_to_message.reply_text(reply_text)
 
 
 @run_async
 def stretch(bot: Bot, update: Update):
     message = update.effective_message
-    count = random.randint(3, 10)
-    reply_text = re.sub(r'([aeiouAEIOUａｅｉｏｕＡＥＩＯＵ])', (r'\1' * count), message.reply_to_message.text)
-    message.reply_to_message.reply_text(reply_text)
+    if not message.reply_to_message:
+        message.reply_text("I need a message to meme.")
+    else:
+        count = random.randint(3, 10)
+        reply_text = re.sub(r'([aeiouAEIOUａｅｉｏｕＡＥＩＯＵ])', (r'\1' * count), message.reply_to_message.text)
+        message.reply_to_message.reply_text(reply_text)
 
 
 @run_async
 def vapor(bot: Bot, update: Update, args: List[str]):
     message = update.effective_message
-
     if not message.reply_to_message:
         if not args:
             message.reply_text("I need a message to convert to vaporwave text.")
@@ -124,7 +138,7 @@ def spongemocktext(bot: Bot, update: Update):
     if message.reply_to_message:
         data = message.reply_to_message.text
     else:
-        data = ''
+        data = message.reply_text("Haha yes, I know how to mock text.")
 
     reply_text = spongemock.mock(data)
     message.reply_to_message.reply_text(reply_text)
@@ -136,10 +150,9 @@ def zalgotext(bot: Bot, update: Update):
     if message.reply_to_message:
         data = message.reply_to_message.text
     else:
-        data = ''
+        data = message.reply_text("Insolant human, you must reply to something to zalgofy it!")
 
-    z = zalgo.zalgo()
-    reply_text = z.zalgofy(data)
+    reply_text = zalgo.zalgo().zalgofy(data)
     message.reply_to_message.reply_text(reply_text)
 
 # Less D A N K modules by @skittles9823 # holi fugg I did some maymays ^^^
@@ -183,7 +196,7 @@ def deepfryer(bot: Bot, update: Update):
         data = []
         data2 = []
 
-    # check if message does contain a photo and cancel when not
+    # check if message does contain media and cancel when not
     if not data and not data2:
         message.reply_text("What am I supposed to do with this?!")
         return
@@ -196,7 +209,7 @@ def deepfryer(bot: Bot, update: Update):
         sticker = bot.get_file(data2.file_id)
         sticker.download('sticker.png')
         image = Image.open("sticker.png")
- 
+
     # the following needs to be executed async (because dumb lib)
     loop = asyncio.new_event_loop()
     loop.run_until_complete(process_deepfry(image, message.reply_to_message, bot))
