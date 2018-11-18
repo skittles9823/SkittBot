@@ -47,11 +47,12 @@ def thonkify(bot: Bot, update: Update):
         image.thumbnail(maxsize, Image.ANTIALIAS)
 
     # put processed image in a buffer and then upload cause async
-    buffer = BytesIO()
-    buffer.name = 'image.png'
-    image.save(buffer, 'PNG')
-    buffer.seek(0)
-    message.reply_photo(photo=buffer, reply=message)
+    with BytesIO() as buffer:
+        buffer.name = 'image.png'
+        image.save(buffer, 'PNG')
+        buffer.seek(0)
+        bot.send_sticker(chat_id=message.chat_id, sticker=buffer)
+
 
 __help__ = """
  thonkify very imp
