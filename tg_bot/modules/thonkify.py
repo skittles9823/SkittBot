@@ -15,7 +15,10 @@ def thonkify(bot: Bot, update: Update):
     from tg_bot.modules.thonkify_dict import thonkifydict
 
     message = update.effective_message
-    msg = update.effective_message.text.split(None, 1)[1]
+    if not message.reply_to_message:
+        msg = message.text.split(None, 1)[1]
+    else:
+        msg = message.reply_to_message.text.split(None, 1)[1]
 
     # the processed photo becomes too long and unreadable + the telegram doesn't support any longer dimensions + you have the lulz.
     if (len(msg)) > 39:
