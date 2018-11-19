@@ -133,7 +133,7 @@ def vapor(bot: Bot, update: Update, args: List[str]):
 
 @run_async
 def me_too(bot: Bot, update: Update):
-    message = update.effective_message.reply_to_message
+    message = update.effective_message
     if random.randint(0, 100) > 60:
         reply = random.choice(["Me too thanks", "Haha yes, me too", "Same lol", "Me irl"])
         message.reply_text(reply)
