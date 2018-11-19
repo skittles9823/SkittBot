@@ -19,7 +19,7 @@ from telegram import MessageEntity
 from telegram.ext import Filters, MessageHandler, run_async
 
 from tg_bot import dispatcher, DEEPFRY_TOKEN
-from tg_bot.modules.disable import DisableAbleCommandHandler
+from tg_bot.modules.disable import DisableAbleCommandHandler, DisableAbleRegexHandler
 
 WIDE_MAP = dict((i, i + 0xFEE0) for i in range(0x21, 0x7F))
 WIDE_MAP[0x20] = 0x3000
@@ -130,6 +130,13 @@ def vapor(bot: Bot, update: Update, args: List[str]):
         message.reply_text(reply_text)
     else:
         message.reply_to_message.reply_text(reply_text)
+
+@run_async
+def me_too(bot: Bot, update: Update):
+    message = update.effective_message.reply_to_message
+    if random.randint(0, 100) > 60:
+        reply = random.choice(["Me too thanks", "Haha yes, me too", "Same lol", "Me irl"])
+        message.reply_text(reply)
 
 # D A N K modules by @deletescape ^^^
 # Less D A N K modules by @skittles9823 # holi fugg I did some maymays vvv
@@ -264,6 +271,7 @@ MOCK_HANDLER = DisableAbleCommandHandler("mock", spongemocktext, admin_ok=True)
 ZALGO_HANDLER = DisableAbleCommandHandler("zalgofy", zalgotext)
 FORBES_HANDLER = DisableAbleCommandHandler("forbes", forbesify, admin_ok=True)
 DEEPFRY_HANDLER = DisableAbleCommandHandler("deepfry", deepfryer, admin_ok=True)
+ME_TOO_THANKS_HANDLER = DisableAbleRegexHandler(r"(?i)me too", me_too, friendly="me_too")
 
 dispatcher.add_handler(COPYPASTA_HANDLER)
 dispatcher.add_handler(CLAPMOJI_HANDLER)
@@ -275,3 +283,4 @@ dispatcher.add_handler(MOCK_HANDLER)
 dispatcher.add_handler(ZALGO_HANDLER)
 dispatcher.add_handler(FORBES_HANDLER)
 dispatcher.add_handler(DEEPFRY_HANDLER)
+dispatcher.add_handler(ME_TOO_THANKS_HANDLER)
