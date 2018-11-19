@@ -8,6 +8,7 @@ from deeppyer import deepfry
 import os
 from pathlib import Path
 import glob
+import saint # the unholiest library ever created
 
 import nltk # shitty lib, but it does work
 nltk.download('punkt')
@@ -228,11 +229,7 @@ def deepfryer(bot: Bot, update: Update):
 
 async def process_deepfry(image: Image, reply: Message, bot: Bot):
     # DEEPFRY IT
-    image = await deepfry(
-        img=image,
-        token=DEEPFRY_TOKEN,
-        url_base='westeurope'
-    )
+    image = await saint.nuke(image)
 
     bio = BytesIO()
     bio.name = 'image.jpeg'
