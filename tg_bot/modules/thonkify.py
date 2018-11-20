@@ -45,7 +45,7 @@ def thonkify(bot: Bot, update: Update):
         image = addedimg
         x = x + value.size[0] + tracking.size[0]
 
-    maxsize = 512, 512
+    maxsize = 1024, 896
     if image.size[0] > maxsize[0]:
         image.thumbnail(maxsize, Image.ANTIALIAS)
 
