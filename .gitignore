@@ -1,3 +1,6 @@
 /tg_bot/config.py
 *.pyc
 .idea/
+/tg_bot/.vscode/*
+/.vscode/*
+bob.jpg

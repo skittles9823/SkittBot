@@ -10,7 +10,7 @@ from telegram.ext.dispatcher import run_async
 from telegram.utils.helpers import escape_markdown
 from tg_bot.modules.helper_funcs.chat_status import is_user_ban_protected, user_admin
 
-import random
+import random, re
 import telegram
 import tg_bot.modules.sql.users_sql as sql
 from tg_bot import dispatcher, OWNER_ID, SUDO_USERS, SUPPORT_USERS, LOGGER
@@ -47,43 +47,57 @@ def snipe(bot: Bot, update: Update, args: List[str]):
 
 @run_async
 def getlink(bot: Bot, update: Update, args: List[int]):
+    message = update.effective_message
     if args:
-        chat_id = int(args[0])
+        pattern = re.compile(r'-\d+')
     else:
-        update.effective_message.reply_text("You don't seem to be referring to a chat")
-    for chat_id in args:
+        message.reply_text("You don't seem to be referring to any chats.")
+    links = "Invite link(s):\n"
+    for chat_id in pattern.findall(message.text):
         try:
             chat = bot.getChat(chat_id)
             bot_member = chat.get_member(bot.id)
             if bot_member.can_invite_users:
                 invitelink = bot.exportChatInviteLink(chat_id)
-                update.effective_message.reply_text("Invite link for: " + chat_id + "\n" + invitelink)
+                links += str(chat_id) + ":\n" + invitelink + "\n"
             else:
-                update.effective_message.reply_text("I don't have access to the invite link.")
+                links += str(chat_id) + ":\nI don't have access to the invite link." + "\n"
         except BadRequest as excp:
-                update.effective_message.reply_text(excp.message + " " + str(chat_id))
+                links += str(chat_id) + ":\n" + excp.message + "\n"
         except TelegramError as excp:
-                update.effective_message.reply_text(excp.message + " " + str(chat_id))
+                links += str(chat_id) + ":\n" + excp.message + "\n"
+
+    message.reply_text(links)
+
 
 @run_async
 def slist(bot: Bot, update: Update):
+    message = update.effective_message
     text1 = "My sudo users are:"
-    for user_id in SUDO_USERS:
-        user = bot.get_chat(user_id)
-        name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
-        if user.username:
-            name = escape_markdown("@" + user.username)
-        text1 += "\n - {}".format(name)
     text2 = "My support users are:"
+    for user_id in SUDO_USERS:
+        try:
+            user = bot.get_chat(user_id)
+            name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
+            if user.username:
+                name = escape_markdown("@" + user.username)
+            text1 += "\n - {}".format(name)
+        except BadRequest as excp:
+            if excp.message == 'Chat not found':
+                text1 += "\n - ({}) - not found".format(user_id)
     for user_id in SUPPORT_USERS:
-        user = bot.get_chat(user_id)
-        name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
-        if user.username:
-            name = escape_markdown("@" + user.username)
-        text2 += "\n - {}".format(name)
+        try:
+            user = bot.get_chat(user_id)
+            name = "[{}](tg://user?id={})".format(user.first_name + (user.last_name or ""), user.id)
+            if user.username:
+                name = escape_markdown("@" + user.username)
+            text2 += "\n - {}".format(name)
+        except BadRequest as excp:
+            if excp.message == 'Chat not found':
+                text2 += "\n - ({}) - not found".format(user_id)
+    message.reply_text(text1 + "\n", parse_mode=ParseMode.MARKDOWN)
+    message.reply_text(text2 + "\n", parse_mode=ParseMode.MARKDOWN)
 
-    update.effective_message.reply_text(text1 + "\n", parse_mode=ParseMode.MARKDOWN)
-    update.effective_message.reply_text(text2 + "\n", parse_mode=ParseMode.MARKDOWN)
 
 @run_async
 @user_admin
@@ -94,7 +108,8 @@ def birthday(bot: Bot, update: Update, args: List[str]):
         bdaymessage = random.choice(MESSAGES)
         update.effective_message.reply_text(bdaymessage + username)
 
-    __help__ = """
+
+__help__ = """
 *Owner only:*
 - /getlink *chatid*: Get the invite link for a specific chat.
 
