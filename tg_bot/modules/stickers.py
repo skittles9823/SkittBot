@@ -1,7 +1,9 @@
 import hashlib
 import os
 import math
+import requests
 
+from io import BytesIO
 from PIL import Image
 
 from typing import Optional, List
@@ -44,6 +46,8 @@ def getsticker(bot: Bot, update: Update):
 def kang(bot: Bot, update: Update, args: List[str]):
     msg = update.effective_message
     user = update.effective_user
+    hash = hashlib.sha1(bytearray(user.id)).hexdigest()
+    packname = "a" + hash[:20] + "_by_"+bot.username
     if msg.reply_to_message:
         if msg.reply_to_message.sticker:
             file_id = msg.reply_to_message.sticker.file_id
@@ -53,8 +57,6 @@ def kang(bot: Bot, update: Update, args: List[str]):
             file_id = msg.reply_to_message.document.file_id
         kang_file = bot.get_file(file_id)
         kang_file.download('kangsticker.png')
-        hash = hashlib.sha1(bytearray(user.id)).hexdigest()
-        packname = "a" + hash[:20] + "_by_"+bot.username
         if args:
             sticker_emoji = str(args[0])
         elif msg.reply_to_message.sticker and msg.reply_to_message.sticker.emoji:
@@ -62,26 +64,9 @@ def kang(bot: Bot, update: Update, args: List[str]):
         else:
             sticker_emoji = "🤔"
         try:
-            maxsize = (512, 512)
             kangsticker = "kangsticker.png"
             im = Image.open(kangsticker)
-            if (im.width and im.height) < 512:
-                size1 = im.width
-                size2 = im.height
-                if im.width > im.height:
-                    scale = 512/size1
-                    size1new = 512
-                    size2new = size2 * scale
-                else:
-                    scale = 512/size2
-                    size1new = size1 * scale
-                    size2new = 512
-                size1new = math.floor(size1new)
-                size2new = math.floor(size2new)
-                sizenew = (size1new, size2new)
-                im = im.resize(sizenew)
-            else:
-                im.thumbnail(maxsize)
+            resize_internal(im)
             if not msg.reply_to_message.sticker:
                 im.save(kangsticker, "PNG")
             bot.add_sticker_to_set(user_id=user.id, name=packname,
@@ -104,13 +89,60 @@ def kang(bot: Bot, update: Update, args: List[str]):
             elif e.message == "Invalid sticker emojis":
                 msg.reply_text("Invalid emoji(s).")
             print(e)
-        if os.path.isfile("kangsticker.png"):
-            os.remove("kangsticker.png")
+    elif args:
+        try:
+            png_sticker = str(args[0])
+            if args[1]:
+                sticker_emoji = args[1]
+            response = requests.get(png_sticker)
+            im = Image.open(BytesIO(response.content))
+            resize_internal(im)
+            im.save(kangsticker, "PNG")
+            bot.add_sticker_to_set(user_id=user.id, name=packname,
+                                    png_sticker=open('kangsticker.png', 'rb'), emojis=sticker_emoji)
+            msg.reply_text("Sticker successfully added to [pack](t.me/addstickers/%s)" % packname + "\n"
+                            "Emoji is:" + " " + sticker_emoji, parse_mode=ParseMode.MARKDOWN)
+        except OSError as e:
+            msg.reply_text("I can only kang images m8.")
+            print(e)
+            return
+        except TelegramError as e:
+            if e.message == "Stickerset_invalid":
+                makepack_internal(msg, user, open('kangsticker.png', 'rb'), sticker_emoji, bot)
+            elif e.message == "Sticker_png_dimensions":
+                im.save(kangsticker, "PNG")
+                bot.add_sticker_to_set(user_id=user.id, name=packname,
+                                        png_sticker=open('kangsticker.png', 'rb'), emojis=sticker_emoji)
+                msg.reply_text("Sticker successfully added to [pack](t.me/addstickers/%s)" % packname + "\n"
+                            "Emoji is:" + " " + sticker_emoji, parse_mode=ParseMode.MARKDOWN)
+            elif e.message == "Invalid sticker emojis":
+                msg.reply_text("Invalid emoji(s).")
+            print(e)
     else:
-        hash = hashlib.sha1(bytearray(user.id)).hexdigest()
-        packname = "a" + hash[:20] + "_by_"+bot.username
         msg.reply_text("Please reply to a sticker, or image to kang it!" + "\n"
                         "Oh, by the way. Your pack can be found [here](t.me/addstickers/%s)" % packname, parse_mode=ParseMode.MARKDOWN)
+    if os.path.isfile("kangsticker.png"):
+        os.remove("kangsticker.png")
+
+def resize_internal(im):
+    maxsize = (512, 512)
+    if (im.width and im.height) < 512:
+        size1 = im.width
+        size2 = im.height
+        if im.width > im.height:
+            scale = 512/size1
+            size1new = 512
+            size2new = size2 * scale
+        else:
+            scale = 512/size2
+            size1new = size1 * scale
+            size2new = 512
+        size1new = math.floor(size1new)
+        size2new = math.floor(size2new)
+        sizenew = (size1new, size2new)
+        im = im.resize(sizenew)
+    else:
+        im.thumbnail(maxsize)
 
 def makepack_internal(msg, user, png_sticker, emoji, bot):
     name = user.first_name
