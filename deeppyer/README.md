@@ -76,3 +76,6 @@ Create a file in [tests](./tests) called `token.json` with the following format:
 `url_base` is optional, and is for if your token is from a different region.
 
 After that, simply run `test.py` and make sure that all the images output as you want.
+
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/SentinelP/SkittBot)
