@@ -115,11 +115,11 @@ def del_blacklist(bot: Bot, update: Update):
     match_string = extract_text(message)
     if not match_string:
         return
-    to_match=match_string.split(" ")
+    to_match = match_string.split(" ")
     chat_filters = sql.get_chat_blacklist(chat.id)
     for trigger in chat_filters:
         for word in to_match:
-            if re.fullmatch(keyword,word,flags=re.IGNORECASE):
+            if re.fullmatch(trigger, word, flags=re.IGNORECASE):
              try:
                 message.delete()
              except BadRequest as excp:

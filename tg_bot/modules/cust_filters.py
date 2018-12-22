@@ -152,7 +152,7 @@ def reply_filter(bot: Bot, update: Update):
     chat_filters = sql.get_chat_triggers(chat.id)
     for keyword in chat_filters:
        for word in to_match:
-         if re.fullmatch(keyword,word, flags=re.IGNORECASE):
+         if re.fullmatch(keyword, word, flags=re.IGNORECASE):
             filt = sql.get_filter(chat.id, keyword)
             if filt.is_sticker:
                 message.reply_sticker(filt.reply)
