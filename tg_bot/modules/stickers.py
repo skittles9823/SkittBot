@@ -106,6 +106,8 @@ def kang(bot: Bot, update: Update, args: List[str]):
                             "Emoji is:" + " " + sticker_emoji, parse_mode=ParseMode.MARKDOWN)
             elif e.message == "Invalid sticker emojis":
                 msg.reply_text("Invalid emoji(s).")
+            elif e.message == "Stickers_too_much":
+                msg.reply_text("Max packsize reached. Press F to pay respecc.")
             print(e)
     elif args:
         try:
