@@ -18,18 +18,18 @@ from tg_bot.modules.helper_funcs.filters import CustomFilters
 from tg_bot.modules.log_channel import loggable
 from tg_bot.modules.sql import users_sql
 
-LOCK_TYPES = {'stickers': Filters.sticker,
+LOCK_TYPES = {'sticker': Filters.sticker,
               'audio': Filters.audio,
               'voice': Filters.voice,
-              'documents': Filters.document,
-              'videos': Filters.video,
-              'contacts': Filters.contact,
-              'photos': Filters.photo,
-              'gifs': Filters.document & CustomFilters.mime_type("video/mp4"),
-              'urls': Filters.entity(MessageEntity.URL) | Filters.caption_entity(MessageEntity.URL),
+              'document': Filters.document,
+              'video': Filters.video,
+              'contact': Filters.contact,
+              'photo': Filters.photo,
+              'gif': Filters.document & CustomFilters.mime_type("video/mp4"),
+              'url': Filters.entity(MessageEntity.URL) | Filters.caption_entity(MessageEntity.URL),
               'bots': Filters.status_update.new_chat_members,
-              'forwards': Filters.forwarded,
-              'games': Filters.game,
+              'forward': Filters.forwarded,
+              'game': Filters.game,
               'location': Filters.location,
               }
 
