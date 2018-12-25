@@ -94,10 +94,6 @@ Install the necessary python dependencies by moving to the project directory and
 
 This will install all necessary python packages.
 
-You also need imagemagick. Install it with your preferred package manger(apt-get?)
-
-`imagemagick`.
-
 ### Database
 
 If you wish to use a database-dependent module (eg: locks, notes, userinfo, users, filters, welcomes),
