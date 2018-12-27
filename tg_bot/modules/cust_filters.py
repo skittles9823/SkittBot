@@ -145,33 +145,27 @@ def stop_filter(bot: Bot, update: Update):
 def reply_filter(bot: Bot, update: Update):
     chat = update.effective_chat  # type: Optional[Chat]
     message = update.effective_message  # type: Optional[Message]
-    match_string = extract_text(message)
-    if not match_string:
+    to_match = extract_text(message)
+    if not to_match:
         return
-    to_match = match_string.split(" ")
+
     chat_filters = sql.get_chat_triggers(chat.id)
     for keyword in chat_filters:
-       for word in to_match:
-         if re.fullmatch(keyword, word, flags=re.IGNORECASE):
+        pattern = r"( |^|[^\w])" + re.escape(keyword) + r"( |$|[^\w])"
+        if re.search(pattern, to_match, flags=re.IGNORECASE):
             filt = sql.get_filter(chat.id, keyword)
             if filt.is_sticker:
                 message.reply_sticker(filt.reply)
-                return
             elif filt.is_document:
                 message.reply_document(filt.reply)
-                return
             elif filt.is_image:
                 message.reply_photo(filt.reply)
-                return
             elif filt.is_audio:
                 message.reply_audio(filt.reply)
-                return
             elif filt.is_voice:
                 message.reply_voice(filt.reply)
-                return
             elif filt.is_video:
                 message.reply_video(filt.reply)
-                return
             elif filt.has_markdown:
                 buttons = sql.get_buttons(chat.id, filt.keyword)
                 keyb = build_keyboard(buttons)
@@ -181,7 +175,6 @@ def reply_filter(bot: Bot, update: Update):
                     message.reply_text(filt.reply, parse_mode=ParseMode.MARKDOWN,
                                        disable_web_page_preview=True,
                                        reply_markup=keyboard)
-                    return
                 except BadRequest as excp:
                     if excp.message == "Unsupported url protocol":
                         message.reply_text("You seem to be trying to use an unsupported url protocol. Telegram "
@@ -200,7 +193,6 @@ def reply_filter(bot: Bot, update: Update):
             else:
                 # LEGACY - all new filters will have has_markdown set to True.
                 message.reply_text(filt.reply)
-                return
             break
 
 
