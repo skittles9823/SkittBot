@@ -213,9 +213,8 @@ def deepfryer(bot: Bot, update: Update):
         photodata = data[len(data) - 1].get_file().download_as_bytearray()
         image = Image.open(io.BytesIO(photodata))
     elif data2:
-        sticker = bot.get_file(data2.file_id)
-        sticker.download('sticker.png')
-        image = Image.open("sticker.png")
+        sticker = bot.get_file(data2.file_id).download_as_bytearray()
+        image = Image.open(io.BytesIO(sticker))
 
     # the following needs to be executed async (because dumb lib)
     loop = asyncio.new_event_loop()
@@ -237,8 +236,6 @@ async def process_deepfry(image: Image, reply: Message, bot: Bot):
     # send it back
     bio.seek(0)
     reply.reply_photo(bio)
-    if Path("sticker.png").is_file():
-        os.remove("sticker.png")
 
 # shitty maymay modules made by @divadsn ^^^
 
