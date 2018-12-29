@@ -145,14 +145,14 @@ def stop_filter(bot: Bot, update: Update):
 def reply_filter(bot: Bot, update: Update):
     chat = update.effective_chat  # type: Optional[Chat]
     message = update.effective_message  # type: Optional[Message]
-    to_match = extract_text(message)
-    if not to_match:
+    match_string = extract_text(message)
+    if not match_string:
         return
-
     chat_filters = sql.get_chat_triggers(chat.id)
     for keyword in chat_filters:
-        pattern = r"( |^|[^\w])" + re.escape(keyword) + r"( |$|[^\w])"
-        if re.search(pattern, to_match, flags=re.IGNORECASE):
+       try:
+         pattern = r"( |^|[^\w])" + keyword + r"( |$|[^\w])"
+         if re.search(pattern, match_string, flags=re.IGNORECASE).group():
             filt = sql.get_filter(chat.id, keyword)
             if filt.is_sticker:
                 message.reply_sticker(filt.reply)
@@ -170,7 +170,6 @@ def reply_filter(bot: Bot, update: Update):
                 buttons = sql.get_buttons(chat.id, filt.keyword)
                 keyb = build_keyboard(buttons)
                 keyboard = InlineKeyboardMarkup(keyb)
-
                 try:
                     message.reply_text(filt.reply, parse_mode=ParseMode.MARKDOWN,
                                        disable_web_page_preview=True,
@@ -194,7 +193,9 @@ def reply_filter(bot: Bot, update: Update):
                 # LEGACY - all new filters will have has_markdown set to True.
                 message.reply_text(filt.reply)
             break
-
+       except:
+           pass
+           
 
 def __stats__():
     return "{} filters, across {} chats.".format(sql.num_filters(), sql.num_chats())

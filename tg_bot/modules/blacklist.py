@@ -118,8 +118,9 @@ def del_blacklist(bot: Bot, update: Update):
 
     chat_filters = sql.get_chat_blacklist(chat.id)
     for trigger in chat_filters:
-        pattern = r"( |^|[^\w])" + re.escape(trigger) + r"( |$|[^\w])"
-        if re.search(pattern, to_match, flags=re.IGNORECASE):
+      pattern = r"( |^|[^\w])" + trigger + r"( |$|[^\w])"
+      try:
+        if re.search(pattern, to_match, flags=re.IGNORECASE).group():
             try:
                 message.delete()
             except BadRequest as excp:
@@ -128,7 +129,9 @@ def del_blacklist(bot: Bot, update: Update):
                 else:
                     LOGGER.exception("Error while deleting blacklist message.")
             break
-
+      except:
+          pass
+                      
 
 def __migrate__(old_chat_id, new_chat_id):
     sql.migrate_chat(old_chat_id, new_chat_id)
