@@ -3,6 +3,7 @@ import json
 import random
 from datetime import datetime
 from typing import Optional, List
+import re
 import time
 import requests
 from telegram import Message, Chat, Update, Bot, MessageEntity
@@ -18,6 +19,8 @@ from tg_bot.modules.helper_funcs.extraction import extract_user
 from tg_bot.modules.helper_funcs.filters import CustomFilters
 from tg_bot.modules.helper_funcs.chat_status import bot_admin, user_admin, can_restrict
 from tg_bot.modules.sql.safemode_sql import set_safemode, is_safemoded
+from tg_bot.modules.rextester.api import Rextester, CompilerError
+from tg_bot.modules.rextester.langs import languages
 
 from geopy.geocoders import Nominatim
 from telegram import Location
@@ -419,17 +422,52 @@ def gps(bot: Bot, update: Update, args: List[str]):
     try:
         geolocator = Nominatim(user_agent="SkittBot")
         location = " ".join(args)
-        geoloc = geolocator.geocode(location)  
+        geoloc = geolocator.geocode(location)
         chat_id = update.effective_chat.id
         lon = geoloc.longitude
         lat = geoloc.latitude
-        the_loc = Location(lon, lat) 
+        the_loc = Location(lon, lat)
         gm = "https://www.google.com/maps/search/{},{}".format(lat,lon)
         bot.send_location(chat_id, location=the_loc)
         message.reply_text("Open with: [Google Maps]({})".format(gm), parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
     except AttributeError:
         message.reply_text("I can't find that")
 
+def execute(bot: Bot, update: Update, args: List[str]):
+
+    message = update.effective_message
+    text = ' '.join(args)
+    regex = re.search('^([\w.#+]+)\s+([\s\S]+?)(?:\s+\/stdin\s+([\s\S]+))?$', text, re.IGNORECASE)
+
+    if not regex:
+        available_languages = ', '.join(languages.keys())
+        message.reply_text('*The availale languages are:*\n`{}`'.format(available_languages), parse_mode=ParseMode.MARKDOWN)
+        return
+
+    language = regex.group(1)
+    code = regex.group(2)
+    stdin = regex.group(3)
+
+    try:
+        regexter = Rextester(language, code, stdin)
+    except CompilerError as exc: # Exception on empy code or missing output
+        message.reply_text(exc)
+        return
+
+    output = ""
+    output += "*Language:*\n`{}`".format(language)
+    output += "*\n\nSource:*\n`{}`".format(code)
+
+    if regexter.result:
+        output += "*\n\nResult:*\n`{}`".format(regexter.result)
+
+    if regexter.warnings:
+        output += "\n\n*Warnings:*\n`{}`\n".format(regexter.warnings)
+
+    if regexter.errors:
+        output += "\n\n*Errors:*\n'{}`".format(regexter.errors)
+
+    message.reply_text(output, parse_mode=ParseMode.MARKDOWN)
 
 # /ip is for private use
 __help__ = """
@@ -441,6 +479,7 @@ __help__ = """
  - /gdpr: deletes your information from the bot's database. Private chats only.
  - /safemode <on/off/yes/no>: Disallows new users to send media for 24 hours after joining a group.
     Use unmute to unrestrict them.
+- /exec <language> <code> [/stdin <stdin>]: Execute a code in a specified language. Send an empty command to get the suppoerted languages
 
  - /markdownhelp: quick summary of how markdown works in telegram - can only be called in private chats.
 """
@@ -463,7 +502,7 @@ MD_HELP_HANDLER = CommandHandler("markdownhelp", markdown_help, filters=Filters.
 STATS_HANDLER = CommandHandler("stats", stats, filters=CustomFilters.sudo_filter)
 GDPR_HANDLER = CommandHandler("gdpr", gdpr, filters=Filters.private)
 GPS_HANDLER = DisableAbleCommandHandler("gps", gps, pass_args=True)
-
+EXECUTE_HANDLER = DisableAbleCommandHandler("exec", execute, pass_args=True)
 
 dispatcher.add_handler(ID_HANDLER)
 dispatcher.add_handler(PING_HANDLER)
@@ -478,3 +517,4 @@ dispatcher.add_handler(STATS_HANDLER)
 dispatcher.add_handler(GDPR_HANDLER)
 dispatcher.add_handler(SAFEMODE_HANDLER)
 dispatcher.add_handler(GPS_HANDLER)
+dispatcher.add_handler(EXECUTE_HANDLER)
