@@ -13,3 +13,10 @@ geopy
 nltk
 aiohttp>=2.2.5
 Pillow>=4.2.0
+bs4
+lxml
+wget
+gTTS
+demjson
+PyLyrics
+pyowm
