@@ -21,3 +21,4 @@ PyLyrics
 pyowm
 googletrans
 gsearch
+py_translator
