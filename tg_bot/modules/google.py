@@ -6,10 +6,10 @@ from tg_bot import dispatcher
 from tg_bot.modules.disable import DisableAbleCommandHandler
 
 def google(bot: Bot, update: Update):
-        query = update.effective_message.text.split(None, 1)
-        result_ = subprocess.run(['gsearch', str(query)], stdout=subprocess.PIPE)
+        query = update.effective_message.text.split(" ", 1)
+        result_ = subprocess.run(['gsearch', str(query[1])], stdout=subprocess.PIPE)
         result = str(result_.stdout.decode())
-        update.effective_message.reply_markdown('*Searching:*\n`' + str(query) + '`\n\n*RESULTS:*\n' + result)
+        update.effective_message.reply_markdown('*Searching:*\n`' + str(query[1]) + '`\n\n*RESULTS:*\n' + result)
 
 __help__ = """
  - /google: Google search
