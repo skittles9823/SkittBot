@@ -2,11 +2,10 @@ future
 emoji
 requests
 sqlalchemy
-python-telegram-bot>=10.1.0
+python-telegram-bot
 psycopg2-binary
 feedparser
 pynewtonmath
-#memes vvv
 spongemock
 zalgo-text
 geopy
@@ -20,3 +19,5 @@ gTTS
 demjson
 PyLyrics
 pyowm
+googletrans
+gsearch
