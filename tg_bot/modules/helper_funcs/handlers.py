@@ -59,6 +59,6 @@ class GbanLockHandler(tg.CommandHandler):
                         res = any(func(message) for func in self.filters)
                     else:
                         res = self.filters(message)
-                     return res
-         return False
+                    return res
+        return False
 
