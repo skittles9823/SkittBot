@@ -49,6 +49,21 @@ def kang(bot: Bot, update: Update, args: List[str]):
     user = update.effective_user
     hash = hashlib.sha1(bytearray(user.id)).hexdigest()
     packname = "a" + hash[:20] + "_by_"+bot.username
+    packname_found = 0
+    packname_version = 1
+    max_stickers = 120
+    prefix = "tg"
+    while packname_found == 0:
+        try:
+            stickerset = bot.get_sticker_set(packname)
+            if len(stickerset.stickers) >= max_stickers:
+                    packname_version += 1
+                    packname = prefix+str(packname_version)+"_a" + hash[:20] + "_by_"+bot.username
+            else:
+                packname_found = 1
+        except TelegramError as e:
+            if e.message == "Stickerset_invalid":
+                packname_found = 1
     kangsticker = "kangsticker.png"
     if msg.reply_to_message:
         if msg.reply_to_message.sticker:
@@ -97,7 +112,8 @@ def kang(bot: Bot, update: Update, args: List[str]):
             return
         except TelegramError as e:
             if e.message == "Stickerset_invalid":
-                makepack_internal(msg, user, open('kangsticker.png', 'rb'), sticker_emoji, bot)
+                makepack_internal(msg, user, open('kangsticker.png', 'rb'), sticker_emoji, bot, packname,
+                                  packname_version)
             elif e.message == "Sticker_png_dimensions":
                 im.save(kangsticker, "PNG")
                 bot.add_sticker_to_set(user_id=user.id, name=packname,
@@ -149,7 +165,8 @@ def kang(bot: Bot, update: Update, args: List[str]):
             return
         except TelegramError as e:
             if e.message == "Stickerset_invalid":
-                makepack_internal(msg, user, open('kangsticker.png', 'rb'), sticker_emoji, bot)
+                makepack_internal(msg, user, open('kangsticker.png', 'rb'), sticker_emoji, bot, packname,
+                                  packname_version)
             elif e.message == "Sticker_png_dimensions":
                 msg.reply_text("Could not resize image to the correct dimensions.")
             elif e.message == "Invalid sticker emojis":
@@ -161,13 +178,14 @@ def kang(bot: Bot, update: Update, args: List[str]):
     if os.path.isfile("kangsticker.png"):
         os.remove("kangsticker.png")
 
-def makepack_internal(msg, user, png_sticker, emoji, bot):
+def makepack_internal(msg, user, png_sticker, emoji, bot, packname, packname_version):
     name = user.first_name
     name = name[:50]
-    hash = hashlib.sha1(bytearray(user.id)).hexdigest()
-    packname = f"a{hash[:20]}_by_{bot.username}"
     try:
-        success = bot.create_new_sticker_set(user.id, packname, name + "'s kang pack",
+        extra_version = ""
+        if packname_version > 1:
+            extra_version = " " + str(packname_version)
+        success = bot.create_new_sticker_set(user.id, packname, name + "'s kang pack" + extra_version,
                                              png_sticker=png_sticker,
                                              emojis=emoji)
     except TelegramError as e:
