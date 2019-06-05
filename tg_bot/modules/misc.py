@@ -331,15 +331,13 @@ def echo(bot: Bot, update: Update):
 
 def ping(bot: Bot, update: Update):
     message = update.effective_message
-    text1 = "Ping to Telegram Bot API Server :"
-    text2 = "Ping to Google : "
+    text1 = "Ping to Telegram Bot API Server: "
+    text2 = "Ping to Google: "
     tg_api = ping3('api.telegram.org', count=10)
     google = ping3('google.com', count=10)
-    text1 += "{}".format(tg_api.rtt_avg_ms)
-    text2 += "{}".format(google.rtt_avg)
-    message.reply_text(text1 + "\n", parse_mode=ParseMode.MARKDOWN)
-    message.reply_text(text2 + "\n", parse_mode=ParseMode.MARKDOWN)
-
+    text1 += "{}ms".format(tg_api.rtt_avg_ms)
+    text2 += "{}ms".format(google.rtt_avg)
+    message.reply_text(text1 + "\n" + text2, parse_mode=ParseMode.MARKDOWN)
 
 @bot_admin
 @can_restrict
