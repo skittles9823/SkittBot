@@ -6,10 +6,6 @@ python-telegram-bot>=10.1.0
 psycopg2-binary
 feedparser
 pynewtonmath
-#memes vvv
-spongemock
-zalgo-text
 geopy
-nltk
 aiohttp>=2.2.5
 Pillow>=4.2.0
