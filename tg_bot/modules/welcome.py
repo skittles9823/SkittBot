@@ -425,11 +425,11 @@ def welcomemute(bot: Bot, update: Update, args: List[str]) -> str:
                     "\nHas toggled welcome mute to <b>ON</b>.".format(html.escape(chat.title),
                                                                           mention_html(user.id, user.first_name))
         else:
-            msg.reply_text("Please enter `off`/`on`/`soft`/`strong`!", parse_mode=ParseMode.MARKDOWN)
+            msg.reply_text("Please enter `off` or `on`!", parse_mode=ParseMode.MARKDOWN)
             return ""
     else:
         curr_setting = sql.welcome_mutes(chat.id)
-        reply = "\n Give me a setting! Choose one of: `off`/`no` or `soft` or `strong` only! \nCurrent setting: `{}`"
+        reply = "\n Give me a setting! Choose one of: `off`/`no` or `on`/`yes` only! \nCurrent setting: `{}`"
         msg.reply_text(reply.format(curr_setting), parse_mode=ParseMode.MARKDOWN)
         return ""
 
