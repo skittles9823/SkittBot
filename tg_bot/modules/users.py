@@ -9,8 +9,13 @@ from telegram.ext import MessageHandler, Filters, CommandHandler
 from telegram.ext.dispatcher import run_async
 
 import tg_bot.modules.sql.users_sql as sql
-from tg_bot import dispatcher, OWNER_ID, LOGGER
+import tg_bot.modules.sql.global_bans_sql as gban_sql
+from tg_bot import dispatcher, SUDO_USERS, SUPPORT_USERS, OWNER_ID, LOGGER
 from tg_bot.modules.helper_funcs.filters import CustomFilters
+from tg_bot.modules.helper_funcs.misc import send_to_list
+from tg_bot.modules.sql.users_sql import get_all_chats
+
+import requests
 
 USERS_GROUP = 4
 
@@ -70,20 +75,29 @@ def log_user(bot: Bot, update: Update):
     chat = update.effective_chat  # type: Optional[Chat]
     msg = update.effective_message  # type: Optional[Message]
 
-    sql.update_user(msg.from_user.id,
-                    msg.from_user.username,
+    id = msg.from_user.id
+    username = msg.from_user.username
+    sql.update_user(id,
+                    username,
                     chat.id,
                     chat.title)
+    __check_cas__(bot, id, username)
 
     if msg.reply_to_message:
-        sql.update_user(msg.reply_to_message.from_user.id,
-                        msg.reply_to_message.from_user.username,
+        id = msg.reply_to_message.from_user.id
+        username = msg.reply_to_message.from_user.username
+        sql.update_user(id,
+                        username,
                         chat.id,
                         chat.title)
+        __check_cas__(bot, id, username)
 
     if msg.forward_from:
-        sql.update_user(msg.forward_from.id,
-                        msg.forward_from.username)
+        id = msg.forward_from.id
+        username = msg.forward_from.username
+        sql.update_user(id, username)
+        __check_cas__(bot, id, username)
+        
 
 
 @run_async
@@ -117,6 +131,44 @@ def __gdpr__(user_id):
 def __migrate__(old_chat_id, new_chat_id):
     sql.migrate_chat(old_chat_id, new_chat_id)
 
+CAS_URL = "https://combot.org/api/cas/check"
+
+def __check_cas__(bot: Bot, user_id, username):
+    json = requests.get(CAS_URL, params={"user_id": str(user_id)}).json()
+    cas_banned = json["ok"] and (json["result"] and json["result"]["offenses"] > 0)
+    if cas_banned:
+        reason = f"User is CAS-Banned (https://combot.org/cas/query?u={user_id})"
+        send_to_list(bot, SUDO_USERS + SUPPORT_USERS,
+            "<b>Global Ban</b>" \
+            "\n#GBAN, #AUTO, #CAS" \
+            "\n<b>Status:</b> <code>Enforcing</code>" \
+            "\n<b>Sudo Admin:</b> <code>Automated Ban</code>" \
+            "\n<b>User:</b> {}" \
+            "\n<b>ID:</b> <code>{}</code>" \
+            "\n<b>Reason:</b> {}".format(mention_html(user_id, username), 
+                user_id, reason), html=True)
+        gban_sql.gban_user(user_id, username or user_chat, reason)
+        chats = get_all_chats()
+        for chat in chats:
+            chat_id = chat.chat_id
+
+            # Check if this group has disabled gbans
+            if not gban_sql.does_chat_gban(chat_id):
+                continue
+
+            try:
+                bot.kick_chat_member(chat_id, user_id)
+            except BadRequest as excp:
+                if excp.message in GBAN_ERRORS:
+                    pass
+                else:
+                    send_to_list(bot, SUDO_USERS + SUPPORT_USERS, "Could not gban due to: {}".format(excp.message))
+                    gban_sql.ungban_user(user_id)
+                    return
+            except TelegramError:
+                pass
+        send_to_list(bot, SUDO_USERS + SUPPORT_USERS,
+                "{} has been successfully gbanned!".format(mention_html(user_id, username)), html=True)
 
 __help__ = ""  # no help string
 
