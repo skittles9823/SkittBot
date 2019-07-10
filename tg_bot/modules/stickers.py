@@ -48,16 +48,13 @@ def kang(bot: Bot, update: Update, args: List[str]):
     user = update.effective_user
     packname = "a" + str(user.id) + "_by_"+bot.username
     kangsticker = "kangsticker.png"
-    print("before first if")
     if msg.reply_to_message:
-        print("stick is reply")
         if msg.reply_to_message.sticker:
             file_id = msg.reply_to_message.sticker.file_id
         elif msg.reply_to_message.photo:
             file_id = msg.reply_to_message.photo[-1].file_id
         elif msg.reply_to_message.document:
             file_id = msg.reply_to_message.document.file_id
-        print("before kang_file")
         kang_file = bot.get_file(file_id)
         kang_file.download('kangsticker.png')
         if args:
@@ -66,7 +63,6 @@ def kang(bot: Bot, update: Update, args: List[str]):
             sticker_emoji = msg.reply_to_message.sticker.emoji
         else:
             sticker_emoji = "🤔"
-        print("after emoji")
         try:
             im = Image.open(kangsticker)
             maxsize = (512, 512)
@@ -87,15 +83,12 @@ def kang(bot: Bot, update: Update, args: List[str]):
                 im = im.resize(sizenew)
             else:
                 im.thumbnail(maxsize)
-            print("after resize")
             if not msg.reply_to_message.sticker:
                 im.save(kangsticker, "PNG")
-            print("before add sticker")
             bot.add_sticker_to_set(user_id=user.id, name=packname,
                                     png_sticker=open('kangsticker.png', 'rb'), emojis=sticker_emoji)
             msg.reply_text("Sticker successfully added to [pack](t.me/addstickers/%s)" % packname + "\n"
                             "Emoji is:" + " " + sticker_emoji, parse_mode=ParseMode.MARKDOWN)
-            print("after add sticker")
         except OSError as e:
             msg.reply_text("I can only kang images m8.")
             print(e)
@@ -167,7 +160,6 @@ def kang(bot: Bot, update: Update, args: List[str]):
         os.remove("kangsticker.png")
 
 def makepack_internal(msg, user, png_sticker, emoji, bot):
-    print("internal makepack")
     name = user.first_name
     name = name[:50]
     packname = f"a{str(user.id)}_by_{bot.username}"
@@ -175,7 +167,6 @@ def makepack_internal(msg, user, png_sticker, emoji, bot):
         success = bot.create_new_sticker_set(user.id, packname, name + "'s kang pack",
                                              png_sticker=png_sticker,
                                              emojis=emoji)
-        print("after makepack")
     except TelegramError as e:
         print(e)
         if e.message == "Sticker set name is already occupied":
@@ -189,7 +180,6 @@ def makepack_internal(msg, user, png_sticker, emoji, bot):
     if success:
         msg.reply_text("Sticker pack successfully created. Get it [here](t.me/addstickers/%s)" % packname,
                        parse_mode=ParseMode.MARKDOWN)
-        print("after success")
     else:
         msg.reply_text("Failed to create sticker pack. Possibly due to blek mejik.")
 
