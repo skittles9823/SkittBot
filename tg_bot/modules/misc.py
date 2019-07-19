@@ -336,7 +336,7 @@ def ping(bot: Bot, update: Update):
     tg_api = ping3('api.telegram.org', count=10)
     google = ping3('google.com', count=10)
     text1 += "{}ms".format(tg_api.rtt_avg_ms)
-    text2 += "{}ms".format(google.rtt_avg)
+    text2 += "{}ms".format(google.rtt_avg_ms)
     message.reply_text(text1 + "\n" + text2, parse_mode=ParseMode.MARKDOWN)
 
 @bot_admin
