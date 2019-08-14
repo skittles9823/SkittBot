@@ -439,7 +439,6 @@ __help__ = """
  - /id: get the current group id. If used by replying to a message, gets that user's id.
  - /runs: reply a random string from an array of replies.
  - /slap: slap a user, or get slapped if not a reply.
- - /time <place>: gives the local time at the given place.
  - /info: get information about a user.
  - /gdpr: deletes your information from the bot's database. Private chats only.
  - /safemode <on/off/yes/no>: Disallows new users to send media for 24 hours after joining a group.
@@ -471,7 +470,7 @@ GPS_HANDLER = DisableAbleCommandHandler("gps", gps, pass_args=True)
 dispatcher.add_handler(ID_HANDLER)
 dispatcher.add_handler(PING_HANDLER)
 dispatcher.add_handler(IP_HANDLER)
-dispatcher.add_handler(TIME_HANDLER)
+# dispatcher.add_handler(TIME_HANDLER)
 dispatcher.add_handler(RUNS_HANDLER)
 dispatcher.add_handler(SLAP_HANDLER)
 dispatcher.add_handler(INFO_HANDLER)
